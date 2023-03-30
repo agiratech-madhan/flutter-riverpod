@@ -13,14 +13,19 @@ class MyHomePage extends ConsumerWidget {
         appBar: AppBar(
           centerTitle: true,
           title: const Text('Photo data'),
+          actions: [
+            // IconButton(
+            //     onPressed: () {
+            //       Navigator.push(
+            //           context,
+            //           MaterialPageRoute(
+            //               builder: (context) => const TodoPage()));
+            //     },
+            //     icon: const Icon(Icons.arrow_forward_ios))
+          ],
         ),
         body: Column(
           children: [
-            // TextField(
-            //   onSubmitted: (value) async {
-            //     ref.read(idValue.notifier).state = value;
-            //   },
-            // ),
             data.when(
                 data: (data) {
                   return Expanded(
