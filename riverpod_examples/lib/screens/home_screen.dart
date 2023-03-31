@@ -8,34 +8,28 @@ class MyHomePage extends ConsumerWidget {
   final String title;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentWeather = ref.watch(wearherProvider);
+    final counter = ref.watch(counterStateProvider);
     return Scaffold(
         appBar: AppBar(
           title: const Text('title'),
         ),
         body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            currentWeather.when(
-                data: (data) {
-                  return Text(data);
-                },
-                error: (error, stackTrace) => const Text('Error'),
-                loading: () => const CircularProgressIndicator()),
-            Expanded(
-                child: ListView.builder(
-                    itemCount: City.values.length,
-                    itemBuilder: (context, index) {
-                      final city = City.values[index];
-                      final isSelected =
-                          city == ref.watch(currentWeatherProvider);
-                      return ListTile(
-                        onTap: () => ref
-                            .read(currentWeatherProvider.notifier)
-                            .state = city,
-                        title: Text(city.toString()),
-                        trailing: isSelected ? Icon(Icons.check) : null,
-                      );
-                    }))
+            Text('Value: $counter'),
+            ElevatedButton(
+              // 2. use the value
+              child: Text('Increment'),
+              // 3. change the state inside a button callback
+              onPressed: () => ref.read(counterStateProvider.notifier).state++,
+            ),
+            ElevatedButton(
+              // 2. use the value
+              child: Text('decrement'),
+              // 3. change the state inside a button callback
+              onPressed: () => ref.read(counterStateProvider.notifier).state--,
+            )
           ],
         ));
   }
