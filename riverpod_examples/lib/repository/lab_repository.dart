@@ -33,6 +33,7 @@ class LabRepository {
     try {
       final response = await http.get(uri);
       LabCenter data = LabCenter.fromJson(jsonDecode(response.body));
+      print(data.nRhLnv4P2FRwQuqCu02?.data?.results?.length);
       return data;
     } catch (e) {
       throw Error();

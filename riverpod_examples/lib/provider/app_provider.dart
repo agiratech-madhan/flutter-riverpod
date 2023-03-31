@@ -16,14 +16,17 @@ import '../models/lab_model.dart';
 import '../repository/lab_repository.dart';
 
 final repoRrovider = Provider((ref) => LabRepository());
-final labProvider = FutureProvider<LabCenter>((ref) {
-  final repo = ref.watch(repoRrovider);
-  return repo.getLabData();
-});
-final labControllerProvider =
-    StateNotifierProvider<LabCenterControllerNotifier, AsyncValue<LabCenter?>>(
-        (ref) {
-  return LabCenterControllerNotifier();
+// final labProvider = FutureProvider<LabCenter>((ref) {
+//   final repo = ref.watch(repoRrovider);
+//   return repo.getLabData();
+// });
+// final dataProvider = Provider.autoDispose<LabCenter>((value) {
+//   final LabCenter data;
+//   data = value;
+// });
+final labControllerProvider = StateNotifierProvider.autoDispose<
+    LabCenterControllerNotifier, AsyncValue<LabCenter?>>((ref) {
+  return LabCenterControllerNotifier(ref);
 });
 final isLoadingLabProvider = StateProvider<bool>((ref) {
   return true;
@@ -31,31 +34,16 @@ final isLoadingLabProvider = StateProvider<bool>((ref) {
 
 class LabCenterControllerNotifier
     extends StateNotifier<AsyncValue<LabCenter?>> {
-  LabCenterControllerNotifier() : super(const AsyncData(null)) {
-    fetLabList(ref: ref!);
-  } //AsyncValue.loading()
-  LabCenterControllerNotifier.create(LabCenter state)
-      : super(AsyncValue.data(state));
-  Ref? ref;
-  Future<void> fetLabList({required Ref ref}) async {
-    // final data = ref.read(repoRrovider).getLabData();
-    // // .then((value) {
-    // // });
-    final repo = ref.read(repoRrovider);
-    // state = data!;
-    // return state;
+  LabCenterControllerNotifier(this.ref) : super(const AsyncValue.loading()) {
+    _service = ref!.watch(repoRrovider);
+
+    fetLabList();
+  } //AsyncValue.loading() //AsyncData(null)
+  late LabRepository _service;
+  final AutoDisposeStateNotifierProviderRef? ref;
+  Future<void> fetLabList() async {
     state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() {
-      return repo.getLabData();
-    }
-
-        // repo.getLabData()
-        //  async {
-        //   state = ref.read(repoRrovider).getLabData();
-        //   // return data;
-        // }
-
-        );
-    ref.read(isLoadingLabProvider.notifier).state = false;
+    state = await AsyncValue.guard(() async => await _service.getLabData());
+    ref?.read(isLoadingLabProvider.notifier).state = false;
   }
 }

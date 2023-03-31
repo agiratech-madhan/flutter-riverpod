@@ -32,6 +32,7 @@ class MyHomePage extends ConsumerWidget {
                 child: CircularProgressIndicator(),
               )
             : data.whenOrNull(
+                error: (e, t) => Text("Error Occured"),
                 data: (data) {
                   return Column(
                     children: [
