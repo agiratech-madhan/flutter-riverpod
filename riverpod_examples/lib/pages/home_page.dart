@@ -31,32 +31,37 @@ class MyHomePage extends ConsumerWidget {
             ? Center(
                 child: CircularProgressIndicator(),
               )
-            : Column(
-                children: [
-                  // data.when(
-                  //     data: (data) {
-                  Expanded(
-                      child: ListView.builder(
-                          itemCount:
-                              data.nRhLnv4P2FRwQuqCu02!.data!.results!.length,
-                          itemBuilder: (context, index) {
-                            final labData =
-                                data.nRhLnv4P2FRwQuqCu02!.data!.results![index];
-                            return ListTile(
-                              leading: CircleAvatar(
-                                child: Text(labData.name![0].toString()),
-                              ),
-                              title: Text(labData.email.toString()),
-                            );
-                          }))
-                  // },
-                  // error: (error, stackTrace) => const Text('Error'),
-                  // loading: () => const Center(
-                  //       child: CircularProgressIndicator(),
-                  //     ))
+            : data.whenOrNull(
+                data: (data) {
+                  return Column(
+                    children: [
+                      // data.when(
+                      //     data: (data) {
+                      Expanded(
+                          child: ListView.builder(
+                              itemCount: data
+                                  ?.nRhLnv4P2FRwQuqCu02?.data?.results?.length,
+                              itemBuilder: (context, index) {
+                                final labData = data?.nRhLnv4P2FRwQuqCu02?.data
+                                    ?.results?[index];
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    child:
+                                        Text(labData!.name![index].toString()),
+                                  ),
+                                  title: Text(labData.email.toString()),
+                                );
+                              }))
+                      // },
+                      // error: (error, stackTrace) => const Text('Error'),
+                      // loading: () => const Center(
+                      //       child: CircularProgressIndicator(),
+                      //     ))
 
-                  ,
-                ],
+                      ,
+                    ],
+                  );
+                },
               ));
   }
 }

@@ -21,7 +21,7 @@ final labProvider = FutureProvider<LabCenter>((ref) {
   return repo.getLabData();
 });
 final labControllerProvider =
-    StateNotifierProvider.autoDispose<LabCenterControllerNotifier, LabCenter>(
+    StateNotifierProvider<LabCenterControllerNotifier, AsyncValue<LabCenter?>>(
         (ref) {
   return LabCenterControllerNotifier();
 });
@@ -29,23 +29,33 @@ final isLoadingLabProvider = StateProvider<bool>((ref) {
   return true;
 });
 
-class LabCenterControllerNotifier extends StateNotifier<AsyncValue<LabCenter>> {
-  LabCenterControllerNotifier() : super(const AsyncValue.loading()) {
+class LabCenterControllerNotifier
+    extends StateNotifier<AsyncValue<LabCenter?>> {
+  LabCenterControllerNotifier() : super(const AsyncData(null)) {
     fetLabList(ref: ref!);
-  }
+  } //AsyncValue.loading()
   LabCenterControllerNotifier.create(LabCenter state)
       : super(AsyncValue.data(state));
   Ref? ref;
   Future<void> fetLabList({required Ref ref}) async {
-    // await ref.read(repoRrovider).getLabData().then((value) {
-    //   ref.read(isLoadingLabProvider.notifier).state = false;
+    // final data = ref.read(repoRrovider).getLabData();
+    // // .then((value) {
+    // // });
+    final repo = ref.read(repoRrovider);
+    // state = data!;
+    // return state;
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(() {
+      return repo.getLabData();
+    }
 
-    //   // state = value;
-    // });
-    state = AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final data = ref.watch(repoRrovider).getLabData();
-      return data;
-    });
+        // repo.getLabData()
+        //  async {
+        //   state = ref.read(repoRrovider).getLabData();
+        //   // return data;
+        // }
+
+        );
+    ref.read(isLoadingLabProvider.notifier).state = false;
   }
 }
