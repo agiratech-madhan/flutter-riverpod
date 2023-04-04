@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movie_app_riverpod/Home/controller/controller.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_stack.dart';
+import 'package:movie_app_riverpod/constants.dart';
 
 import '../models/movie_model.dart';
 
@@ -31,9 +32,8 @@ class HomeScreen extends HookConsumerWidget {
               'The Movie Database',
               style: TextStyle(color: Colors.grey, fontSize: 17),
             ),
-            trailing: const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    'https://image.shutterstock.com/mosaic_250/287881/1768126784/stock-photo-young-handsome-man-with-beard-wearing-casual-sweater-and-glasses-over-blue-background-happy-face-1768126784.jpg')),
+            trailing: CircleAvatar(
+                backgroundImage: NetworkImage(Constants.userProfile)),
           )),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,6 +56,8 @@ class HomeScreen extends HookConsumerWidget {
                 Function onFieldSubmitted) {
               return TextField(
                 onSubmitted: (value) async {
+                  FocusManager.instance.primaryFocus?.unfocus();
+
                   ref.read(movieControllerProvider.notifier).filterMovie(value);
 
                   // isSearch = true;
@@ -99,6 +101,8 @@ class HomeScreen extends HookConsumerWidget {
                 ref
                     .read(movieControllerProvider.notifier)
                     .filterMovie(option.title!.toLowerCase());
+                FocusManager.instance.primaryFocus?.unfocus();
+
                 // isSearch = true;
                 // await provider.loadData((option.title)!.toLowerCase());
                 // FocusManager.instance.primaryFocus?.unfocus();
