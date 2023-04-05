@@ -10,7 +10,6 @@ class Movies {
         movies.map((e) => MovieData.fromJson(e)).toList();
     return Movies(item: moviesData);
   }
-
   Movies copyWith({
     List<MovieData>? item,
   }) {
