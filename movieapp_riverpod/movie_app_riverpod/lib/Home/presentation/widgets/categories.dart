@@ -105,7 +105,6 @@ class Categories extends HookConsumerWidget {
                         style: OutlinedButton.styleFrom(
                             backgroundColor: Colors.white),
                         onPressed: () {
-                          // print(element.id);
                           ref
                               .read(genresListProvider.notifier)
                               .updateOption(element.id, false);
