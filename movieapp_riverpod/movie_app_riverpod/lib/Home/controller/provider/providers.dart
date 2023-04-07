@@ -17,8 +17,11 @@ final genresListProvider =
     StateNotifierProvider<GenresController, GenresList>((ref) {
   return GenresController(ref);
 });
+final filterProvider = StateProvider<Iterable<Genres>>((ref) {
+  final res = ref
+      .watch(genresListProvider)
+      .genres
+      .where((element) => element.selected == true);
 
-final selectedProvider = StateProvider.family<bool, int>((ref, x) {
-  final gProvider = ref.watch(genresListProvider).genres[x].selected;
-  return gProvider;
+  return res;
 });

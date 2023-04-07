@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:movie_app_riverpod/Home/models/genres_model.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/categories.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_filters.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_results.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/search_item.dart';
 import 'package:movie_app_riverpod/constants.dart';
 
-import '../controller/provider/providers.dart';
-
 class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomeScreenState();
 }
@@ -21,12 +17,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(
     BuildContext context,
   ) {
-    // ref.watch(genresListProvider);
-    ref.listen(genresListProvider, (GenresList? q, GenresList c) {
-      print(q?.genres.first.selected);
-      print(c.genres.first.selected);
-    });
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black54,
@@ -49,6 +39,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 backgroundImage: NetworkImage(Constants.userProfile)),
           )),
       body: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(
@@ -72,7 +63,63 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ]),
             ),
           ),
-          const Categories(),
+          // Container(
+          //   height: 200,
+          //   child: ListView.builder(
+          //     // controller: ,
+          //     itemCount: data.genres.length,
+          //     itemBuilder: (context, index) {
+          //       // final se = ref.watch(selectedProvider(index));
+          //       final element = data.genres.elementAt(index);
+          //       final s = ref.read(selectedProvider(index).notifier);
+          //       final sem = sets[index];
+          //       return ListTile(
+          //         leading: Checkbox(
+          //           value: sem,
+          //           onChanged: (value) {
+          //             // print(
+          //             //     ref.watch(genresListProvider).genres[index].selected);
+          //             ref
+          //                 .read(genresListProvider.notifier)
+          //                 .updateOption(element.id, value!);
+          //             // ref.read(genresListProvider.notifier).refreshState();
+          //             // s.update((state)=>state(data.genres))
+          //             // print(
+          //             //     ref.watch(genresListProvider).genres[index].selected);
+
+          //             // print(value);
+          //           },
+          //         ),
+          //         title: Text(element.name),
+          //       );
+          //     },
+          //   ),
+          // ),
+
+          // SizedBox(height: 70, child: const Categories()),
+
+          // Row(
+          //   mainAxisSize: MainAxisSize.min,
+          //   children: [
+          //     SizedBox(width: 70, height: 60, child: Text("data")),
+
+          //     // Flexible(
+          //     // child:
+          //     Expanded(
+          //       flex: 0,
+          //       child: SizedBox(
+          //         height: 140,
+          //         // child:
+          //         // Flexible(
+          //         //   child: ListView(
+          //         //     scrollDirection: Axis.horizontal,
+          //         //   ),
+          //         // ),
+          //       ),
+          //     )
+          //   ],
+          // )
+          const Flexible(child: Categories()),
           const MovieResult()
         ],
       ),

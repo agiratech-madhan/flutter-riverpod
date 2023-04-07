@@ -17,12 +17,15 @@ class GenresController extends StateNotifier<GenresList> {
     state = data!;
   }
 
-  void setOptions(GenresList options) {
-    state = options;
-  }
-
   void updateOption(int index, bool value) {
-    state.genres[index].selected = value;
-    // setOptions(state);
+    state = state.copyWith(
+        genres: state.genres.map((e) {
+      if (e.id == index) {
+        return e.copyWith(selected: value);
+      } else {
+        return e;
+      }
+    }).toList());
+    state = state;
   }
 }
