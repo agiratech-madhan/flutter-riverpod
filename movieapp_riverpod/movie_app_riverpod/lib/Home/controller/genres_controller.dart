@@ -17,7 +17,7 @@ class GenresController extends StateNotifier<GenresList> {
     state = data!;
   }
 
-  void updateOption(int index, bool value) {
+  Future<void> updateOption(int index, bool value) async {
     state = state.copyWith(
         genres: state.genres.map((e) {
       if (e.id == index) {

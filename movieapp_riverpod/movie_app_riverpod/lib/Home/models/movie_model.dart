@@ -31,6 +31,7 @@ class MovieData {
   final String? releaseDate;
   final String? title;
   final bool? video;
+  final List<dynamic>? genrId;
   final num? voteAverage;
   final num? voteCount;
   MovieData({
@@ -45,14 +46,19 @@ class MovieData {
     required this.releaseDate,
     required this.title,
     required this.video,
+    required this.genrId,
     required this.voteAverage,
     required this.voteCount,
   });
   factory MovieData.fromJson(Map<String, dynamic> json) {
+    // List<num> generes_data = json['genre_ids'];
+    // final data=generes_data.map
+    print(json['genre_ids'].runtimeType);
     return MovieData(
         backdropPath: json['backdrop_path'],
         id: json['id'],
         mediaType: json['media_type'],
+        genrId: json['genre_ids'],
         originalLanguage: json['original_language'],
         originalTitle: json['original_title'],
         overview: json['overview'],
@@ -65,3 +71,5 @@ class MovieData {
         voteCount: json['vote_count']);
   }
 }
+
+// class Gene

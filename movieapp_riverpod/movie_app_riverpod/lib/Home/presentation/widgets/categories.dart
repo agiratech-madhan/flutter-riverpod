@@ -7,7 +7,12 @@ class Categories extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sets = ref.watch(filterProvider);
-
+    // List<int> list1 = [
+    //   1,
+    //   2,
+    // ];
+    // List<int> s = [1, 2];
+    // print(list1.containsAll([1, 2]));
     return SizedBox(
       height: 70,
       child: Row(
@@ -58,19 +63,38 @@ class Categories extends HookConsumerWidget {
                                   return ListTile(
                                     leading: Checkbox(
                                       value: element.selected,
-                                      onChanged: (value) {
-                                        print(ref
-                                            .watch(genresListProvider)
-                                            .genres[index]
-                                            .selected);
-                                        ref
+                                      onChanged: (value) async {
+                                        // print(ref
+                                        //     .watch(genresListProvider)
+                                        //     .genres[index]
+                                        //     .selected);
+                                        final sestss =
+                                            ref.watch(filterProvider);
+                                        print(sestss);
+                                        print(sets.length);
+                                        await ref
                                             .read(genresListProvider.notifier)
                                             .updateOption(element.id, value!);
-                                        print(element.id);
-                                        print(ref
-                                            .watch(genresListProvider)
-                                            .genres[index]
-                                            .selected);
+                                        // print(element.id);
+                                        // print(ref
+                                        //     .watch(genresListProvider)
+                                        //     .genres[index]
+                                        //     .selected);
+                                        final sests = ref.watch(filterProvider);
+                                        print(sests);
+                                        print(sets.length);
+
+                                        if (sests.isNotEmpty) {
+                                          ref
+                                              .read(
+                                                  filterSearchProvider.notifier)
+                                              .state = true;
+                                        } else {
+                                          ref
+                                              .read(
+                                                  filterSearchProvider.notifier)
+                                              .state = false;
+                                        }
                                       },
                                     ),
                                     title: Text(element.name),
@@ -108,6 +132,14 @@ class Categories extends HookConsumerWidget {
                           ref
                               .read(genresListProvider.notifier)
                               .updateOption(element.id, false);
+                          final s = ref.watch(filterProvider);
+                          if (s.isNotEmpty) {
+                            ref.read(filterSearchProvider.notifier).state =
+                                true;
+                          } else {
+                            ref.read(filterSearchProvider.notifier).state =
+                                false;
+                          }
                         },
                         child:
                             Text(s[index].name, textAlign: TextAlign.justify)),

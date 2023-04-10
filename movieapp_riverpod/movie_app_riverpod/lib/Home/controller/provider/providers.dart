@@ -8,6 +8,7 @@ import '../../repository/movie_repository.dart';
 import '../movie_controller.dart';
 
 final movieFilterProvider = StateProvider((ref) => MovieType.popular);
+final filterSearchProvider = StateProvider((ref) => false);
 final repoProvider = Provider((ref) => MovieRepository());
 final movieControllerProvider =
     StateNotifierProvider.autoDispose<MovieController, Movies>((ref) {
@@ -25,3 +26,4 @@ final filterProvider = StateProvider<Iterable<Genres>>((ref) {
 
   return res;
 });
+final isLoadingProvider = StateProvider<bool>((ref) => false);

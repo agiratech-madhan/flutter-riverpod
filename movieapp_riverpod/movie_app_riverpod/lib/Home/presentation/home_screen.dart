@@ -6,6 +6,8 @@ import 'package:movie_app_riverpod/Home/presentation/widgets/movie_results.dart'
 import 'package:movie_app_riverpod/Home/presentation/widgets/search_item.dart';
 import 'package:movie_app_riverpod/constants.dart';
 
+import '../controller/provider/providers.dart';
+
 class HomeScreen extends StatefulHookConsumerWidget {
   const HomeScreen({super.key});
   @override
@@ -17,6 +19,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(
     BuildContext context,
   ) {
+    final sets = ref.watch(filterProvider);
+    final isFiltered = ref.watch(filterSearchProvider);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black54,
@@ -120,7 +124,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           //   ],
           // )
           const Flexible(child: Categories()),
-          const MovieResult()
+          (isFiltered && sets.isEmpty)
+              ? const Text("No result found")
+              : const MovieResult()
         ],
       ),
     );
