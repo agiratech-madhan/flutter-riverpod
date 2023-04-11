@@ -26,6 +26,6 @@ class GenresController extends StateNotifier<GenresList> {
         return e;
       }
     }).toList());
-    state = state;
+    // state = data;
   }
 }

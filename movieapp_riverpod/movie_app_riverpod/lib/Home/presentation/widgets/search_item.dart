@@ -29,6 +29,7 @@ class SearchMovie extends HookConsumerWidget {
         return TextField(
           onSubmitted: (value) async {
             FocusManager.instance.primaryFocus?.unfocus();
+            FocusScope.of(context).unfocus();
             ref
                 .read(movieControllerProvider.notifier)
                 .fetchMovies(filterValue: value);

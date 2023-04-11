@@ -14,7 +14,7 @@ class MovieRepository {
           {'api_key': Constants.apiKey, 'query': searchValue});
       final response = await http.get(url);
       Movies moviesData = Movies.fromJson(jsonDecode(response.body));
-      // print("#response${response.body}");
+      print("#response${response.body}");
       return moviesData;
     } catch (e) {
       throw 'error Occured';

@@ -7,16 +7,22 @@ class Categories extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sets = ref.watch(selectedGenresListProvider);
+    final filteredDataProvider = ref.watch(appliedFilter);
     return SizedBox(
       height: 70,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: filteredDataProvider
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
         children: [
           SizedBox(
             height: 50,
             child: OutlinedButton.icon(
               style: OutlinedButton.styleFrom(foregroundColor: Colors.white),
               onPressed: () {
+                if (sets.isEmpty) {
+                  ref.read(appliedFilter.notifier).state = false;
+                }
                 showModalBottomSheet(
                   backgroundColor: Colors.transparent,
                   isScrollControlled: true,
@@ -59,22 +65,9 @@ class Categories extends HookConsumerWidget {
                                     leading: Checkbox(
                                       value: element.selected,
                                       onChanged: (value) async {
-                                        await ref
+                                        ref
                                             .read(genresListProvider.notifier)
                                             .updateOption(element.id, value!);
-                                        final sests = ref
-                                            .watch(selectedGenresListProvider);
-                                        if (sests.isNotEmpty) {
-                                          ref
-                                              .read(
-                                                  filterSearchProvider.notifier)
-                                              .state = true;
-                                        } else {
-                                          ref
-                                              .read(
-                                                  filterSearchProvider.notifier)
-                                              .state = false;
-                                        }
                                       },
                                     ),
                                     title: Text(element.name),
@@ -82,7 +75,47 @@ class Categories extends HookConsumerWidget {
                                 },
                               ),
                             );
-                          })
+                          }),
+                          Container(
+                            color: Colors.white,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        ref
+                                            .read(movieControllerProvider
+                                                .notifier)
+                                            .updateFilter();
+                                        ref.read(appliedFilter.notifier).state =
+                                            true;
+
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Apply')),
+                                ),
+                                Container(
+                                  height: 40,
+                                  width: 80,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 20, vertical: 5),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        if (!filteredDataProvider) {
+                                          ref.invalidate(genresListProvider);
+                                        }
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Cancel')),
+                                ),
+                              ],
+                            ),
+                          )
                         ],
                       ),
                     );
@@ -93,42 +126,49 @@ class Categories extends HookConsumerWidget {
               label: const Text('Filter'),
             ),
           ),
-          Expanded(
-            child: SizedBox(
-              height: 40,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: sets.length,
-                itemBuilder: (context, index) {
-                  final data = ref.watch(selectedGenresListProvider);
-                  final element = data.elementAt(index);
-                  final s = sets.toList();
-                  return Container(
-                    margin: const EdgeInsets.only(right: 10),
-                    child: OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.grey,
-                            foregroundColor: Colors.white),
-                        onPressed: () {
-                          ref
-                              .read(genresListProvider.notifier)
-                              .updateOption(element.id, false);
-                          final s = ref.watch(selectedGenresListProvider);
-                          if (s.isNotEmpty) {
-                            ref.read(filterSearchProvider.notifier).state =
-                                true;
-                          } else {
-                            ref.read(filterSearchProvider.notifier).state =
-                                false;
-                          }
-                        },
-                        child:
-                            Text(s[index].name, textAlign: TextAlign.justify)),
-                  );
-                },
+          if (filteredDataProvider)
+            Expanded(
+              child: SizedBox(
+                height: 40,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: sets.length,
+                  itemBuilder: (context, index) {
+                    final data = ref.watch(selectedGenresListProvider);
+                    final element = data.elementAt(index);
+                    final s = sets.toList();
+                    return Container(
+                      margin: const EdgeInsets.only(right: 10),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              backgroundColor: Colors.grey,
+                              foregroundColor: Colors.white),
+                          onPressed: () async {
+                            ref
+                                .read(genresListProvider.notifier)
+                                .updateOption(element.id, false);
+
+                            final s = ref.watch(selectedGenresListProvider);
+                            await ref
+                                .read(movieControllerProvider.notifier)
+                                .updateFilter();
+                            if (s.isNotEmpty) {
+                              ref.read(filterSearchProvider.notifier).state =
+                                  true;
+                            } else {
+                              ref.read(filterSearchProvider.notifier).state =
+                                  false;
+
+                              ref.read(appliedFilter.notifier).state = false;
+                            }
+                          },
+                          child: Text(s[index].name,
+                              textAlign: TextAlign.justify)),
+                    );
+                  },
+                ),
               ),
             ),
-          ),
         ],
       ),
     );

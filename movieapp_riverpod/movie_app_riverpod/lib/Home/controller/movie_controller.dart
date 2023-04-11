@@ -43,4 +43,26 @@ class MovieController extends StateNotifier<Movies?> {
       // ref?.read(isLoadingProvider.notifier).state = false;
     }
   }
+
+  Future<void> updateFilter() async {
+    final filter = ref!.watch(movieFilterProvider);
+    final value = await repo?.loadData('', filterType: filter.value);
+
+    final sets = ref!.watch(selectedGenresListProvider);
+    print(sets);
+    final filteredData = sets.isEmpty
+        ? value?.item.toList()
+        : value?.item
+            .where(
+              (element) => Set.of(element.genrId!)
+                  .containsAll(sets.map((e) => e.id).toList()),
+            )
+            .toList();
+    print("filteredData$filteredData");
+    state = sets.isEmpty
+        ? value!
+        : Movies(
+            item: filteredData!,
+          );
+  }
 }

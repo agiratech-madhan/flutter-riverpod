@@ -25,7 +25,7 @@ final selectedGenresListProvider = StateProvider<Iterable<Genres>>((ref) {
       .watch(genresListProvider)
       .genres
       .where((element) => element.selected == true);
-
   return res;
 });
 final isLoadingProvider = StateProvider<bool>((ref) => false);
+final appliedFilter = StateProvider<bool>((ref) => false);
