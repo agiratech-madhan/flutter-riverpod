@@ -12,31 +12,32 @@ class MovieFilter extends ConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: MovieType.values
-          .map((type) => GestureDetector(
-                onTap: () =>
-                    ref.read(movieFilterProvider.notifier).state = type,
-                child: Container(
-                  height: 30,
-                  width: 90,
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(14),
-                    color: type == movieType ? Colors.grey : null,
-                  ),
-                  child: Text(
-                    type.name,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white),
-                  ),
+          .map(
+            (type) => GestureDetector(
+              onTap: () => ref.read(movieFilterProvider.notifier).state = type,
+              child: Container(
+                height: 30,
+                width: 90,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(14),
+                  color: type == movieType ? Colors.grey : null,
                 ),
+                child: Text(
+                  type.name,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
 
-                // Chip(
-                // label: Text(
-                //   type.name,
-                // ),
-                //   backgroundColor: type == movieType ? Colors.blue : null,
-                // ),
-              ))
+              // Chip(
+              // label: Text(
+              //   type.name,
+              // ),
+              //   backgroundColor: type == movieType ? Colors.blue : null,
+              // ),
+            ),
+          )
           .toList(),
     );
   }

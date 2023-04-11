@@ -36,7 +36,7 @@ class MovieStack extends HookConsumerWidget {
                 children: [
                   Row(
                     children: [
-                      Padding(
+                      const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8.0),
                         child: Icon(
                           Icons.star,
@@ -46,7 +46,7 @@ class MovieStack extends HookConsumerWidget {
                       ),
                       Text(
                         voteAverage,
-                        style: TextStyle(
+                        style: const TextStyle(
                             color: Colors.amber,
                             fontSize: 20,
                             fontWeight: FontWeight.bold),

@@ -15,10 +15,12 @@ class SearchMovie extends HookConsumerWidget {
         if (textEditingValue.text == '') {
           return List.empty();
         } else {
-          return data.item
-              .where((element) => element.title!
-                  .toLowerCase()
-                  .contains(textEditingValue.text.toLowerCase()))
+          return data!.item
+              .where(
+                (element) => element.title!.toLowerCase().contains(
+                      textEditingValue.text.toLowerCase(),
+                    ),
+              )
               .toList();
         }
       },
@@ -35,6 +37,8 @@ class SearchMovie extends HookConsumerWidget {
           controller: controller,
           decoration: InputDecoration(
               hintText: 'Search',
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.92),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(20.0),
@@ -43,14 +47,11 @@ class SearchMovie extends HookConsumerWidget {
               fillColor: Colors.grey.withOpacity(0.7),
               prefixIconColor: Colors.red,
               prefixIcon: IconButton(
-                  onPressed: (() async {}),
-                  icon: const Icon(
-                    Icons.search,
-                    color: Colors.white,
-                  )),
-              suffixIcon: const Icon(
-                Icons.mic_none_rounded,
-                color: Colors.grey,
+                onPressed: (() async {}),
+                icon: const Icon(
+                  Icons.search,
+                  color: Colors.white,
+                ),
               ),
               suffixIconColor: Colors.grey),
         );

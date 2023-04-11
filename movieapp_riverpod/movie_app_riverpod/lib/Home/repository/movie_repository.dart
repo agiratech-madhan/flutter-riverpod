@@ -14,7 +14,7 @@ class MovieRepository {
           {'api_key': Constants.apiKey, 'query': searchValue});
       final response = await http.get(url);
       Movies moviesData = Movies.fromJson(jsonDecode(response.body));
-      print("#response${response.body}");
+      // print("#response${response.body}");
       return moviesData;
     } catch (e) {
       throw 'error Occured';
@@ -23,14 +23,13 @@ class MovieRepository {
 
   Future<GenresList> getGenresList() async {
     try {
-      final response = await http.get(Uri.parse(
-          'https://api.themoviedb.org/3/genre/movie/list?api_key=b6ee00729c9ca9a458e3625f96877b1a&language=en-US'));
-      print(response.body);
+      final response = await http.get(Uri.parse(Constants.genreList));
+      // print(response.body);
 
       final responseValue = GenresList.fromJson(jsonDecode(response.body));
       return responseValue;
     } catch (e) {
-      print(e);
+      // print(e);
       throw 'error Occred';
     }
   }

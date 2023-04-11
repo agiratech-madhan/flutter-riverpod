@@ -6,13 +6,7 @@ class Categories extends HookConsumerWidget {
   const Categories({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final sets = ref.watch(filterProvider);
-    // List<int> list1 = [
-    //   1,
-    //   2,
-    // ];
-    // List<int> s = [1, 2];
-    // print(list1.containsAll([1, 2]));
+    final sets = ref.watch(selectedGenresListProvider);
     return SizedBox(
       height: 70,
       child: Row(
@@ -21,6 +15,7 @@ class Categories extends HookConsumerWidget {
           SizedBox(
             height: 50,
             child: OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(foregroundColor: Colors.white),
               onPressed: () {
                 showModalBottomSheet(
                   backgroundColor: Colors.transparent,
@@ -38,8 +33,8 @@ class Categories extends HookConsumerWidget {
                               height: MediaQuery.of(context).size.height * 0.08,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
+                                children: const [
+                                  SizedBox(
                                     height: 50,
                                     width: 50,
                                     child: Icon(
@@ -64,26 +59,11 @@ class Categories extends HookConsumerWidget {
                                     leading: Checkbox(
                                       value: element.selected,
                                       onChanged: (value) async {
-                                        // print(ref
-                                        //     .watch(genresListProvider)
-                                        //     .genres[index]
-                                        //     .selected);
-                                        final sestss =
-                                            ref.watch(filterProvider);
-                                        print(sestss);
-                                        print(sets.length);
                                         await ref
                                             .read(genresListProvider.notifier)
                                             .updateOption(element.id, value!);
-                                        // print(element.id);
-                                        // print(ref
-                                        //     .watch(genresListProvider)
-                                        //     .genres[index]
-                                        //     .selected);
-                                        final sests = ref.watch(filterProvider);
-                                        print(sests);
-                                        print(sets.length);
-
+                                        final sests = ref
+                                            .watch(selectedGenresListProvider);
                                         if (sests.isNotEmpty) {
                                           ref
                                               .read(
@@ -114,25 +94,26 @@ class Categories extends HookConsumerWidget {
             ),
           ),
           Expanded(
-            // flex: 1,
             child: SizedBox(
-              height: 50,
+              height: 40,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: sets.length,
                 itemBuilder: (context, index) {
-                  final data = ref.watch(filterProvider);
+                  final data = ref.watch(selectedGenresListProvider);
                   final element = data.elementAt(index);
                   final s = sets.toList();
-                  return SizedBox(
+                  return Container(
+                    margin: const EdgeInsets.only(right: 10),
                     child: OutlinedButton(
                         style: OutlinedButton.styleFrom(
-                            backgroundColor: Colors.white),
+                            backgroundColor: Colors.grey,
+                            foregroundColor: Colors.white),
                         onPressed: () {
                           ref
                               .read(genresListProvider.notifier)
                               .updateOption(element.id, false);
-                          final s = ref.watch(filterProvider);
+                          final s = ref.watch(selectedGenresListProvider);
                           if (s.isNotEmpty) {
                             ref.read(filterSearchProvider.notifier).state =
                                 true;

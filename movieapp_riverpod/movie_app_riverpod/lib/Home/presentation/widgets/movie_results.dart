@@ -12,45 +12,44 @@ class MovieResult extends HookConsumerWidget {
     final data = ref.watch(movieControllerProvider);
     final isLoading = ref.watch(isLoadingProvider);
     return SizedBox(
-        height: MediaQuery.of(context).size.height * 0.55,
-        child: isLoading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : data.item.isEmpty
-                ? const Center(
-                    child: Text(
-                      "No data found",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: data.item.length,
-                    scrollDirection: Axis.horizontal,
-                    itemBuilder: ((context, index) {
-                      // final datas=
-
-                      final moviewValue = data.item[index];
-                      // print("madhan${moviewValue.genrId?[index].toString()}");
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailPage(
-                                  imdbValue: moviewValue.voteAverage.toString(),
-                                  voteAverage: moviewValue.voteAverage!,
-                                  posterPath: moviewValue.posterPath ?? '',
-                                  popularity: moviewValue.popularity ?? 0,
-                                  title: moviewValue.title ?? '',
-                                  overView: moviewValue.overview ?? ''),
-                            ),
-                          );
-                        },
-                        child: MovieStack(
-                            moviePath: moviewValue.posterPath.toString(),
-                            voteAverage: moviewValue.voteAverage.toString()),
-                      );
-                    })));
+      height: MediaQuery.of(context).size.height * 0.55,
+      child: isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : data!.item.isEmpty
+              ? const Center(
+                  child: Text(
+                    "No data found",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                )
+              : ListView.builder(
+                  itemCount: data.item.length,
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: ((context, index) {
+                    final moviewValue = data.item[index];
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailPage(
+                                imdbValue: moviewValue.voteAverage.toString(),
+                                voteAverage: moviewValue.voteAverage!,
+                                posterPath: moviewValue.posterPath ?? '',
+                                popularity: moviewValue.popularity ?? 0,
+                                title: moviewValue.title ?? '',
+                                overView: moviewValue.overview ?? ''),
+                          ),
+                        );
+                      },
+                      child: MovieStack(
+                          moviePath: moviewValue.posterPath.toString(),
+                          voteAverage: moviewValue.voteAverage.toString()),
+                    );
+                  }),
+                ),
+    );
   }
 }

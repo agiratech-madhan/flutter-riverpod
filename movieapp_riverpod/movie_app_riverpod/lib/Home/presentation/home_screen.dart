@@ -19,8 +19,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget build(
     BuildContext context,
   ) {
-    final sets = ref.watch(filterProvider);
+    final sets = ref.watch(selectedGenresListProvider);
     final isFiltered = ref.watch(filterSearchProvider);
+    final data = ref.watch(movieControllerProvider);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.black54,
@@ -28,6 +30,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: ListTile(
+            contentPadding: const EdgeInsets.all(0),
             title: RichText(
                 text: const TextSpan(children: [
               TextSpan(
@@ -44,12 +47,15 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           )),
       body: Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(
             height: 20,
           ),
-          const MovieFilter(),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 14.0),
+            child: MovieFilter(),
+          ),
           const SizedBox(
             height: 10,
           ),
@@ -57,76 +63,34 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             height: 10,
           ),
           const SearchMovie(),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 33.0, vertical: 20),
-            child: RichText(
-              text: const TextSpan(children: [
-                TextSpan(
-                    text: 'Top Results',
-                    style: TextStyle(color: Colors.white, fontSize: 20)),
-              ]),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20),
+              child: RichText(
+                text: const TextSpan(
+                  children: [
+                    TextSpan(
+                        text: 'Top Results',
+                        style: TextStyle(color: Colors.white, fontSize: 20)),
+                  ],
+                ),
+              ),
             ),
           ),
-          // Container(
-          //   height: 200,
-          //   child: ListView.builder(
-          //     // controller: ,
-          //     itemCount: data.genres.length,
-          //     itemBuilder: (context, index) {
-          //       // final se = ref.watch(selectedProvider(index));
-          //       final element = data.genres.elementAt(index);
-          //       final s = ref.read(selectedProvider(index).notifier);
-          //       final sem = sets[index];
-          //       return ListTile(
-          //         leading: Checkbox(
-          //           value: sem,
-          //           onChanged: (value) {
-          //             // print(
-          //             //     ref.watch(genresListProvider).genres[index].selected);
-          //             ref
-          //                 .read(genresListProvider.notifier)
-          //                 .updateOption(element.id, value!);
-          //             // ref.read(genresListProvider.notifier).refreshState();
-          //             // s.update((state)=>state(data.genres))
-          //             // print(
-          //             //     ref.watch(genresListProvider).genres[index].selected);
-
-          //             // print(value);
-          //           },
-          //         ),
-          //         title: Text(element.name),
-          //       );
-          //     },
-          //   ),
-          // ),
-
-          // SizedBox(height: 70, child: const Categories()),
-
-          // Row(
-          //   mainAxisSize: MainAxisSize.min,
-          //   children: [
-          //     SizedBox(width: 70, height: 60, child: Text("data")),
-
-          //     // Flexible(
-          //     // child:
-          //     Expanded(
-          //       flex: 0,
-          //       child: SizedBox(
-          //         height: 140,
-          //         // child:
-          //         // Flexible(
-          //         //   child: ListView(
-          //         //     scrollDirection: Axis.horizontal,
-          //         //   ),
-          //         // ),
-          //       ),
-          //     )
-          //   ],
-          // )
           const Flexible(child: Categories()),
-          (isFiltered && sets.isEmpty)
-              ? const Text("No result found")
-              : const MovieResult()
+          data == null
+              ? const Align(
+                  alignment: Alignment.center,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.grey,
+                  )),
+                )
+              : (isFiltered && sets.isEmpty)
+                  ? const Text("No result found")
+                  : const MovieResult(),
         ],
       ),
     );

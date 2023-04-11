@@ -11,14 +11,16 @@ final movieFilterProvider = StateProvider((ref) => MovieType.popular);
 final filterSearchProvider = StateProvider((ref) => false);
 final repoProvider = Provider((ref) => MovieRepository());
 final movieControllerProvider =
-    StateNotifierProvider.autoDispose<MovieController, Movies>((ref) {
+    StateNotifierProvider.autoDispose<MovieController, Movies?>((ref) {
   return MovieController(ref);
 });
 final genresListProvider =
     StateNotifierProvider<GenresController, GenresList>((ref) {
   return GenresController(ref);
 });
-final filterProvider = StateProvider<Iterable<Genres>>((ref) {
+
+///filter genre list
+final selectedGenresListProvider = StateProvider<Iterable<Genres>>((ref) {
   final res = ref
       .watch(genresListProvider)
       .genres
