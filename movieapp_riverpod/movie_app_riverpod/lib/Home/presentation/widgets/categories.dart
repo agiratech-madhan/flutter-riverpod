@@ -158,6 +158,9 @@ class Categories extends HookConsumerWidget {
                             } else {
                               ref.read(filterSearchProvider.notifier).state =
                                   false;
+                              if (!filteredDataProvider) {
+                                ref.invalidate(genresListProvider);
+                              }
 
                               ref.read(appliedFilter.notifier).state = false;
                             }
