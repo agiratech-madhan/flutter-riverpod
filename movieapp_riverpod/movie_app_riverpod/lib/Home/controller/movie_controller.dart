@@ -12,14 +12,11 @@ class MovieController extends StateNotifier<Movies?> {
   late MovieRepository? repo;
   final StateNotifierProviderRef? ref;
   Future<void> fetchMovies({String filterValue = ''}) async {
-    // ref?.read(isLoadingProvider.notifier).state = true;
-
     final filter = ref!.watch(movieFilterProvider);
-    final value = await repo?.loadData(filterValue, filterType: filter.value);
-
-    final sets = ref!.watch(selectedGenresListProvider);
     final isSearched = ref!.watch(filterSearchProvider);
-    // ref?.read(isLoadingProvider.notifier).state = false;
+    print(isSearched);
+    final value = await repo?.loadData(filterValue, filterType: filter.value);
+    final sets = ref!.watch(selectedGenresListProvider);
 
     if (isSearched == true) {
       final filteredData = sets.isEmpty
@@ -37,10 +34,7 @@ class MovieController extends StateNotifier<Movies?> {
               item: filteredData!,
             );
     } else {
-      // ref?.read(isLoadingProvider.notifier).state = true;
-
       state = value!;
-      // ref?.read(isLoadingProvider.notifier).state = false;
     }
   }
 
