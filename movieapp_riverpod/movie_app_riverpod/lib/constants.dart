@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 abstract class Constants {
   static String apiKey = 'b6ee00729c9ca9a458e3625f96877b1a';
   static String userProfile =
@@ -5,4 +7,7 @@ abstract class Constants {
 
   static String genreList =
       'https://api.themoviedb.org/3/genre/movie/list?api_key=b6ee00729c9ca9a458e3625f96877b1a&language=en-US';
+
+  static Color greyColor = Colors.grey;
+  static Color whiteColor = Colors.white;
 }

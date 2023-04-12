@@ -1,17 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import '../../../utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class MovieStack extends HookConsumerWidget {
   const MovieStack({
+    super.key,
     required this.moviePath,
     required this.voteAverage,
   });
-
   final String moviePath;
   final String voteAverage;
-  // final String
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Stack(
@@ -52,13 +50,19 @@ class MovieStack extends HookConsumerWidget {
                             fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8.0),
-                        child: Chip(
-                          backgroundColor: Colors.amber,
-                          labelStyle: const TextStyle(
-                              fontSize: 17, color: Colors.black),
-                          label: Text('IMDB $voteAverage'),
+                      Container(
+                        margin: const EdgeInsets.all(8.0),
+                        height: 30,
+                        width: 80,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            color: Colors.amber,
+                            borderRadius: BorderRadius.circular(8)),
+                        child: Text(
+                          "IMBD  $voteAverage",
+                          style: const TextStyle(
+                            fontSize: 16,
+                          ),
                         ),
                       ),
                     ],

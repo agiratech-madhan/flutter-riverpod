@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movie_app_riverpod/Home/presentation/fav_screen.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/categories.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_filters.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_results.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/search_item.dart';
-import 'package:movie_app_riverpod/constants.dart';
 
 import '../controller/provider/providers.dart';
 
@@ -15,35 +16,75 @@ class HomeScreen extends StatefulHookConsumerWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+  bool value = false;
   @override
   Widget build(
     BuildContext context,
   ) {
     final sets = ref.watch(selectedGenresListProvider);
-    final isFiltered = ref.watch(filterSearchProvider);
+
+    final isFiltered = ref.watch(appliedFilter);
     final data = ref.watch(movieControllerProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.black54,
       appBar: AppBar(
           backgroundColor: Colors.transparent,
           elevation: 0,
           title: ListTile(
             contentPadding: const EdgeInsets.all(0),
             title: RichText(
-                text: const TextSpan(children: [
-              TextSpan(
-                  text: 'Hello ',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-              TextSpan(text: 'Flutter', style: TextStyle(fontSize: 20)),
-            ])),
+                textAlign: TextAlign.left,
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: 'Hello ',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: !themeMode ? Colors.grey : Colors.white,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Flutter',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: !themeMode ? Colors.grey : Colors.white,
+                    ),
+                  ),
+                ])),
             subtitle: const Text(
               'The Movie Database',
               style: TextStyle(color: Colors.grey, fontSize: 17),
             ),
-            trailing: CircleAvatar(
-                backgroundImage: NetworkImage(Constants.userProfile)),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FavScreen(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.favorite_outlined,
+                      color: !themeMode ? Colors.grey : Colors.white,
+                      size: 28,
+                    )),
+                CupertinoSwitch(
+                  value: themeMode,
+                  onChanged: (v) {
+                    ref.read(themeProvider.notifier).state = v;
+                  },
+                  trackColor: Colors.grey,
+                  activeColor:
+                      value ? Colors.black.withOpacity(0.4) : Colors.grey,
+                ),
+              ],
+            ),
           )),
       body: Column(
         mainAxisSize: MainAxisSize.min,
@@ -69,11 +110,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               padding:
                   const EdgeInsets.symmetric(horizontal: 18.0, vertical: 20),
               child: RichText(
-                text: const TextSpan(
+                text: TextSpan(
                   children: [
                     TextSpan(
                         text: 'Top Results',
-                        style: TextStyle(color: Colors.white, fontSize: 20)),
+                        style: TextStyle(
+                            color: !themeMode ? Colors.grey : Colors.white,
+                            fontSize: 20)),
                   ],
                 ),
               ),

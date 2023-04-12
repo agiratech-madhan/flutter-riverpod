@@ -1,7 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movie_app_riverpod/Home/controller/provider/providers.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends ConsumerWidget {
   const DetailPage({
     Key? key,
     required this.imdbValue,
@@ -19,16 +21,20 @@ class DetailPage extends StatelessWidget {
   final String overView;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(themeProvider);
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: !theme ? Colors.white : Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
               Navigator.of(context).pop();
             },
-            icon: const Icon(Icons.arrow_back)),
+            icon: Icon(
+              Icons.arrow_back,
+              color: !theme ? Colors.white : Colors.black,
+            )),
         backgroundColor: Colors.transparent,
       ),
       body: SingleChildScrollView(
@@ -50,6 +56,7 @@ class DetailPage extends StatelessWidget {
                     ),
                   ),
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         children: [
@@ -89,8 +96,11 @@ class DetailPage extends StatelessWidget {
                       ),
                       Text(
                         title,
-                        style:
-                            const TextStyle(fontSize: 20, color: Colors.white),
+                        textAlign: TextAlign.left,
+                        style: TextStyle(
+                            fontSize: 20,
+                            color: !theme ? Colors.black : Colors.white,
+                            fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
                         height: 10,
@@ -101,8 +111,9 @@ class DetailPage extends StatelessWidget {
                           // height: 135,
                           child: Text(
                             overView,
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.white),
+                            style: TextStyle(
+                                fontSize: 18,
+                                color: !theme ? Colors.black : Colors.white),
                           ),
                         ),
                       ),

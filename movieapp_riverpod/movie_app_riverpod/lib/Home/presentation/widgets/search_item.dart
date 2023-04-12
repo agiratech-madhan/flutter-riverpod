@@ -39,7 +39,8 @@ class SearchMovie extends HookConsumerWidget {
           decoration: InputDecoration(
               hintText: 'Search',
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.width * 0.92),
+                  maxWidth: MediaQuery.of(context).size.width * 0.92,
+                  maxHeight: MediaQuery.of(context).size.height * 0.07),
               border: OutlineInputBorder(
                 borderSide: BorderSide.none,
                 borderRadius: BorderRadius.circular(20.0),

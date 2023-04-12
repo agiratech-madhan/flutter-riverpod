@@ -9,6 +9,7 @@ class MovieFilter extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final movieType = ref.watch(movieFilterProvider);
+    final themeMode = ref.watch(themeProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: MovieType.values
@@ -21,21 +22,23 @@ class MovieFilter extends ConsumerWidget {
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(14),
-                  color: type == movieType ? Colors.grey : null,
+                  color: type == movieType
+                      ? themeMode
+                          ? Colors.white
+                          : Colors.grey
+                      : null,
                 ),
                 child: Text(
                   type.name,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(
+                      color: themeMode
+                          ? Colors.grey
+                          : type != movieType
+                              ? Colors.grey
+                              : Colors.white),
                 ),
               ),
-
-              // Chip(
-              // label: Text(
-              //   type.name,
-              // ),
-              //   backgroundColor: type == movieType ? Colors.blue : null,
-              // ),
             ),
           )
           .toList(),

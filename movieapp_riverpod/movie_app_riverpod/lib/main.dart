@@ -1,21 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:movie_app_riverpod/Home/controller/provider/providers.dart';
 import 'package:movie_app_riverpod/Home/presentation/home_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeProvider);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        useMaterial3: true,
+        colorScheme: const ColorScheme.light(primary: Colors.grey),
+        // textTheme: textTheme,
+        // bottomSheetTheme: BottomSheetThemeData(
+        //   backgroundColor: Colors.transparent.withOpacity(0),
+        // ),
       ),
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        colorScheme: const ColorScheme.dark(),
+      ),
+      themeMode: themeMode ? ThemeMode.dark : ThemeMode.light,
       home: const HomeScreen(),
     );
   }

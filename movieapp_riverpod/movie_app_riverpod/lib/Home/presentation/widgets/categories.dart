@@ -8,123 +8,138 @@ class Categories extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final sets = ref.watch(selectedGenresListProvider);
     final filteredDataProvider = ref.watch(appliedFilter);
-    return SizedBox(
+    final themeMode = ref.watch(themeProvider);
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
       height: 70,
+      // color: Colors.pink,
       child: Row(
         mainAxisAlignment: filteredDataProvider
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
-          SizedBox(
-            height: 50,
-            child: OutlinedButton.icon(
-              style: OutlinedButton.styleFrom(foregroundColor: Colors.white),
-              onPressed: () {
-                if (sets.isEmpty) {
-                  ref.read(appliedFilter.notifier).state = false;
-                }
-                showModalBottomSheet(
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  isDismissible: true,
-                  context: context,
-                  builder: (context) {
-                    return SizedBox(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GestureDetector(
-                            onTap: Navigator.of(context).pop,
-                            child: SizedBox(
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: const [
-                                  SizedBox(
-                                    height: 50,
-                                    width: 50,
-                                    child: Icon(
-                                      Icons.cancel_presentation_sharp,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          HookConsumer(builder: (context, r, child) {
-                            final data = r.watch(genresListProvider);
-                            return Container(
-                              color: Colors.white,
-                              height: MediaQuery.of(context).size.height * 0.70,
-                              child: ListView.builder(
-                                itemCount: data.genres.length,
-                                itemBuilder: (context, index) {
-                                  final element = data.genres.elementAt(index);
-                                  return ListTile(
-                                    leading: Checkbox(
-                                      value: element.selected,
-                                      onChanged: (value) async {
-                                        ref
-                                            .read(genresListProvider.notifier)
-                                            .updateOption(element.id, value!);
-                                      },
-                                    ),
-                                    title: Text(element.name),
-                                  );
-                                },
-                              ),
-                            );
-                          }),
-                          Container(
-                            color: Colors.white,
+          TextButton.icon(
+            style: TextButton.styleFrom(
+                backgroundColor: themeMode ? Colors.grey : Colors.white,
+                foregroundColor: !themeMode ? Colors.grey : Colors.white),
+            onPressed: () {
+              if (sets.isEmpty) {
+                ref.read(appliedFilter.notifier).state = false;
+              }
+              showModalBottomSheet(
+                backgroundColor: Colors.transparent.withOpacity(0.0),
+                isScrollControlled: true,
+                isDismissible: true,
+                elevation: 0,
+                useSafeArea: true,
+                context: context,
+                builder: (context) {
+                  return SizedBox(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GestureDetector(
+                          onTap: Navigator.of(context).pop,
+                          child: Container(
+                            color: Colors.transparent,
+                            height: MediaQuery.of(context).size.height * 0.08,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 40,
-                                  width: 80,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        ref
-                                            .read(movieControllerProvider
-                                                .notifier)
-                                            .updateFilter();
-                                        ref.read(appliedFilter.notifier).state =
-                                            true;
-
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Apply')),
-                                ),
-                                Container(
-                                  height: 40,
-                                  width: 80,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 20, vertical: 5),
-                                  child: ElevatedButton(
-                                      onPressed: () {
-                                        if (!filteredDataProvider) {
-                                          ref.invalidate(genresListProvider);
-                                        }
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Cancel')),
+                              children: const [
+                                SizedBox(
+                                  height: 50,
+                                  width: 50,
+                                  child: Icon(
+                                    Icons.cancel_presentation_sharp,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ],
                             ),
-                          )
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-              icon: const Icon(Icons.sort_sharp),
-              label: const Text('Filter'),
-            ),
+                          ),
+                        ),
+                        HookConsumer(builder: (context, r, child) {
+                          final data = r.watch(genresListProvider);
+                          return Container(
+                            color: !themeMode ? Colors.white : Colors.black,
+                            height: MediaQuery.of(context).size.height * 0.70,
+                            child: ListView.builder(
+                              itemCount: data.genres.length,
+                              itemBuilder: (context, index) {
+                                final element = data.genres.elementAt(index);
+                                return ListTile(
+                                  leading: Checkbox(
+                                    autofocus: true,
+                                    side: const BorderSide(color: Colors.grey),
+                                    activeColor: Colors.grey,
+                                    checkColor: Colors.white,
+                                    value: element.selected,
+                                    onChanged: (value) async {
+                                      ref
+                                          .read(genresListProvider.notifier)
+                                          .updateOption(element.id, value!);
+                                    },
+                                  ),
+                                  title: Text(
+                                    element.name,
+                                    style: TextStyle(
+                                        color: !themeMode
+                                            ? Colors.grey
+                                            : Colors.grey),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        }),
+                        Container(
+                          color: !themeMode ? Colors.white : Colors.black,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                height: 40,
+                                width: 80,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      ref
+                                          .read(
+                                              movieControllerProvider.notifier)
+                                          .updateFilter();
+                                      ref.read(appliedFilter.notifier).state =
+                                          true;
+
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Apply')),
+                              ),
+                              Container(
+                                height: 40,
+                                width: 80,
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 5),
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                      if (!filteredDataProvider) {
+                                        ref.invalidate(genresListProvider);
+                                      }
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Cancel')),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  );
+                },
+              );
+            },
+            icon: const Icon(Icons.sort_sharp),
+            label: const Text('Filter'),
           ),
           if (filteredDataProvider)
             Expanded(
@@ -139,25 +154,24 @@ class Categories extends HookConsumerWidget {
                     final s = sets.toList();
                     return Container(
                       margin: const EdgeInsets.only(right: 10),
-                      child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
+                      child: TextButton(
+                          style: TextButton.styleFrom(
                               backgroundColor: Colors.grey,
                               foregroundColor: Colors.white),
                           onPressed: () async {
                             ref
                                 .read(genresListProvider.notifier)
                                 .updateOption(element.id, false);
-
                             final s = ref.watch(selectedGenresListProvider);
-                            await ref
-                                .read(movieControllerProvider.notifier)
-                                .updateFilter();
                             if (s.isNotEmpty) {
-                              ref.read(filterSearchProvider.notifier).state =
-                                  true;
+                              await ref
+                                  .read(movieControllerProvider.notifier)
+                                  .updateFilter();
                             } else {
-                              ref.read(filterSearchProvider.notifier).state =
-                                  false;
+                              await ref
+                                  .read(movieControllerProvider.notifier)
+                                  .fetchMovies();
+
                               if (!filteredDataProvider) {
                                 ref.invalidate(genresListProvider);
                               }

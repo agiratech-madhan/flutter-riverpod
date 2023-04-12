@@ -1,25 +1,25 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-class Movies {
-  final List<MovieData> item;
-  Movies({
+class FavoriteMovies {
+  final List<FavMovieData> item;
+  FavoriteMovies({
     required this.item,
   });
-  factory Movies.fromJson(Map<String, dynamic> json) {
+  factory FavoriteMovies.fromJson(Map<String, dynamic> json) {
     List movies = json['results'];
-    List<MovieData> moviesData =
-        movies.map((e) => MovieData.fromJson(e)).toList();
-    return Movies(item: moviesData);
+    List<FavMovieData> moviesData =
+        movies.map((e) => FavMovieData.fromJson(e)).toList();
+    return FavoriteMovies(item: moviesData);
   }
-  Movies copyWith({
-    List<MovieData>? item,
+  FavoriteMovies copyWith({
+    List<FavMovieData>? item,
   }) {
-    return Movies(
+    return FavoriteMovies(
       item: item ?? this.item,
     );
   }
 }
 
-class MovieData {
+class FavMovieData {
   String? backdropPath;
   final int? id;
   final String? mediaType;
@@ -34,7 +34,7 @@ class MovieData {
   final List<dynamic>? genrId;
   final num? voteAverage;
   final num? voteCount;
-  MovieData({
+  FavMovieData({
     required this.backdropPath,
     required this.id,
     required this.mediaType,
@@ -50,8 +50,8 @@ class MovieData {
     required this.voteAverage,
     required this.voteCount,
   });
-  factory MovieData.fromJson(Map<String, dynamic> json) {
-    return MovieData(
+  factory FavMovieData.fromJson(Map<String, dynamic> json) {
+    return FavMovieData(
         backdropPath: json['backdrop_path'],
         id: json['id'],
         mediaType: json['media_type'],
@@ -68,5 +68,3 @@ class MovieData {
         voteCount: json['vote_count']);
   }
 }
-
-// class Gene
