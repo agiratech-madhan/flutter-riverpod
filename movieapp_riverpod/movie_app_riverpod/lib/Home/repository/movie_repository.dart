@@ -1,6 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'package:movie_app_riverpod/Home/models/favorite_movie_model.dart';
 import 'package:movie_app_riverpod/Home/models/genres_model.dart';
+import 'package:movie_app_riverpod/Home/models/video_reponse.dart';
 import 'package:movie_app_riverpod/constants.dart';
 import 'dart:convert';
 
@@ -43,6 +44,21 @@ class MovieRepository {
           FavoriteMovies.fromJson(jsonDecode(response.body));
       return moviesData;
     } catch (e) {
+      throw 'error Occured';
+    }
+  }
+
+  Future<VideosList> movieVideos(String? id) async {
+    try {
+      final url = Uri.parse(
+          'https://api.themoviedb.org/3/movie/$id/videos?api_key=b6ee00729c9ca9a458e3625f96877b1a&language=en-US');
+      final response = await http.get(url);
+      print(response.body);
+      VideosList moviesData = VideosList.fromJson(jsonDecode(response.body));
+      print('moviesData$moviesData');
+      return moviesData;
+    } catch (e) {
+      print(e.toString());
       throw 'error Occured';
     }
   }

@@ -26,33 +26,23 @@ class MovieController extends StateNotifier<Movies?> {
                     .containsAll(sets.map((e) => e.id).toList()),
               )
               .toList();
-      state = sets.isEmpty
-          ? value!
-          : Movies(
-              item: filteredData!,
-            );
+      if (!mounted) {
+        return;
+      } else {
+        state = sets.isEmpty
+            ? value!
+            : Movies(
+                item: filteredData!,
+              );
+      }
     } else {
       final filter = ref!.watch(movieFilterProvider);
       final value = await repo?.loadData(filterValue, filterType: filter.value);
-      state = value!;
+      if (!mounted) {
+        return;
+      } else {
+        state = value!;
+      }
     }
   }
-
-  // Future<void> updateFilter() async {
-  //   // final value = state;
-  //   final sets = ref!.watch(selectedGenresListProvider);
-  //   final filteredData = sets.isEmpty
-  //       ? state?.item.toList()
-  //       : state?.item
-  //           .where(
-  //             (element) => Set.of(element.genrId!)
-  //                 .containsAll(sets.map((e) => e.id).toList()),
-  //           )
-  //           .toList();
-  //   if (mounted) {
-  //     state = Movies(
-  //       item: filteredData ?? [],
-  //     );
-  //   }
-  // }
 }

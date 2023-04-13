@@ -2,6 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:movie_app_riverpod/Home/controller/genres_controller.dart';
 import 'package:movie_app_riverpod/Home/models/favorite_movie_model.dart';
 import 'package:movie_app_riverpod/Home/models/genres_model.dart';
+import 'package:movie_app_riverpod/Home/models/video_reponse.dart';
 
 import '../../models/movie_model.dart';
 import '../../presentation/filters.dart';
@@ -9,14 +10,9 @@ import '../../repository/movie_repository.dart';
 import '../movie_controller.dart';
 
 final movieFilterProvider = StateProvider((ref) => MovieType.popular);
-// final filterSearchProvider = StateProvider((ref) => false);
 final repoProvider = Provider((ref) => MovieRepository());
 final movieControllerProvider =
-    StateNotifierProvider<MovieController, Movies?>((ref) {
-  // ref.onDispose(() {
-  //   ref.invalidate(movieControllerProvider);
-  // })
-
+    StateNotifierProvider.autoDispose<MovieController, Movies?>((ref) {
   return MovieController(ref);
 });
 final genresListProvider =
@@ -28,7 +24,6 @@ final fav = FutureProvider<FavoriteMovies>((ref) {
   return data.fetchFavMovies();
 });
 
-///filter genre list
 final selectedGenresListProvider = StateProvider<Iterable<Genres>>((ref) {
   final res = ref
       .watch(genresListProvider)
@@ -39,3 +34,9 @@ final selectedGenresListProvider = StateProvider<Iterable<Genres>>((ref) {
 final isLoadingProvider = StateProvider<bool>((ref) => false);
 final appliedFilter = StateProvider<bool>((ref) => false);
 final themeProvider = StateProvider<bool>((ref) => false);
+final videoProvider = FutureProvider.family<VideosList, String>(
+  (ref, arg) {
+    final provider = ref.watch(repoProvider);
+    return provider.movieVideos(arg);
+  },
+);

@@ -1,9 +1,12 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'package:movie_app_riverpod/Home/controller/provider/providers.dart';
 
-class DetailPage extends ConsumerWidget {
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+
+class DetailPage extends StatefulHookConsumerWidget {
   const DetailPage({
     Key? key,
     required this.imdbValue,
@@ -12,6 +15,7 @@ class DetailPage extends ConsumerWidget {
     required this.popularity,
     required this.title,
     required this.overView,
+    required this.id,
   }) : super(key: key);
   final String imdbValue;
   final num voteAverage;
@@ -19,10 +23,26 @@ class DetailPage extends ConsumerWidget {
   final double popularity;
   final String title;
   final String overView;
+  final String id;
+  // final STr
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends ConsumerState<DetailPage> {
+  late YoutubePlayerController youtubePlayerController;
+  @override
+  void initState() {
+    youtubePlayerController =
+        YoutubePlayerController(initialVideoId: widget.id);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final theme = ref.watch(themeProvider);
+
     return Scaffold(
       backgroundColor: !theme ? Colors.white : Colors.black,
       extendBodyBehindAppBar: true,
@@ -33,9 +53,21 @@ class DetailPage extends ConsumerWidget {
             },
             icon: Icon(
               Icons.arrow_back,
-              color: !theme ? Colors.white : Colors.black,
+              color: theme ? Colors.white : Colors.black,
             )),
-        backgroundColor: Colors.transparent,
+        title: Text(widget.title),
+        /**
+         * Container(
+              height: 50,
+              width: 50,
+              child: videos.when(
+                  data: (data) {
+                    return Text(data.videos.length.toString());
+                  },
+                  error: (e, r) => Text('error'),
+                  loading: () => CircularProgressIndicator()),
+            ),
+         */
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -46,14 +78,15 @@ class DetailPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: NetworkImage(
-                              'https://image.tmdb.org/t/p/w185/$posterPath')),
-                    ),
+                    // decoration: BoxDecoration(
+                    //   image: DecorationImage(
+                    //       fit: BoxFit.cover,
+                    //       image: NetworkImage(
+                    //           'https://image.tmdb.org/t/p/w185/$posterPath')),
+                    // ),
+                    child: YoutubePlayer(controller: youtubePlayerController),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +99,7 @@ class DetailPage extends ConsumerWidget {
                               backgroundColor: Colors.amber,
                               labelStyle: const TextStyle(
                                   fontSize: 17, color: Colors.black),
-                              label: Text('IMDB $voteAverage'),
+                              label: Text('IMDB ${widget.voteAverage}'),
                             ),
                           ),
                           const Padding(
@@ -78,14 +111,14 @@ class DetailPage extends ConsumerWidget {
                             ),
                           ),
                           Text(
-                            '$voteAverage',
+                            '${widget.voteAverage}',
                             style: const TextStyle(
                                 color: Colors.amber,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            ' (${(popularity).round()}K reviews)',
+                            ' (${(widget.popularity).round()}K reviews)',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 20,
@@ -95,7 +128,7 @@ class DetailPage extends ConsumerWidget {
                         ],
                       ),
                       Text(
-                        title,
+                        widget.title,
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             fontSize: 20,
@@ -110,7 +143,7 @@ class DetailPage extends ConsumerWidget {
                         child: SizedBox(
                           // height: 135,
                           child: Text(
-                            overView,
+                            widget.overView,
                             style: TextStyle(
                                 fontSize: 18,
                                 color: !theme ? Colors.black : Colors.white),
@@ -128,3 +161,25 @@ class DetailPage extends ConsumerWidget {
     );
   }
 }
+// class DetailPage extends ConsumerWidget {
+//   const DetailPage({
+//     Key? key,
+//     required this.imdbValue,
+//     required this.voteAverage,
+//     required this.posterPath,
+//     required this.popularity,
+//     required this.title,
+//     required this.overView,
+//     required this.id,
+//   }) : super(key: key);
+//   final String imdbValue;
+//   final num voteAverage;
+//   final String posterPath;
+//   final double popularity;
+//   final String title;
+//   final String overView;
+//   final int id;
+
+ 
+
+// }

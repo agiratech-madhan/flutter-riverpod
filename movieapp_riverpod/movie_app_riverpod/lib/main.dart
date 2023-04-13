@@ -18,14 +18,11 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         useMaterial3: true,
         colorScheme: const ColorScheme.light(primary: Colors.grey),
-        // textTheme: textTheme,
-        // bottomSheetTheme: BottomSheetThemeData(
-        //   backgroundColor: Colors.transparent.withOpacity(0),
-        // ),
+        // primaryColor: Colors.grey,
       ),
       darkTheme: ThemeData(
         useMaterial3: true,
-        colorScheme: const ColorScheme.dark(),
+        colorScheme: const ColorScheme.dark(primary: Colors.black),
       ),
       themeMode: themeMode ? ThemeMode.dark : ThemeMode.light,
       home: const HomeScreen(),

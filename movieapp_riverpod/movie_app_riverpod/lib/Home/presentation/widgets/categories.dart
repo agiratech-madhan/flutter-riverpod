@@ -12,7 +12,6 @@ class Categories extends HookConsumerWidget {
     return Container(
       margin: const EdgeInsets.only(left: 20),
       height: 70,
-      // color: Colors.pink,
       child: Row(
         mainAxisAlignment: filteredDataProvider
             ? MainAxisAlignment.end
@@ -108,7 +107,8 @@ class Categories extends HookConsumerWidget {
                                           .read(
                                               movieControllerProvider.notifier)
                                           .fetchMovies();
-
+                                      ref.read(appliedFilter.notifier).state =
+                                          true;
                                       Navigator.of(context).pop();
                                     },
                                     child: const Text('Apply')),

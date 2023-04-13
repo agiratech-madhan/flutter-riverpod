@@ -10,6 +10,7 @@ class MovieResult extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(movieControllerProvider);
+    // final filter = ref.watch(appliedFilter);
     final isLoading = ref.watch(isLoadingProvider);
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.55,
@@ -30,19 +31,26 @@ class MovieResult extends HookConsumerWidget {
                   itemBuilder: ((context, index) {
                     final moviewValue = data.item[index];
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DetailPage(
+                      onTap: () async {
+                        final videos = ref
+                            .watch(videoProvider(moviewValue.id!.toString()));
+                        // String url = videos.value!.videos.first.key.toString();
+                        videos.whenData((value) {
+                          return Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailPage(
                                 imdbValue: moviewValue.voteAverage.toString(),
                                 voteAverage: moviewValue.voteAverage!,
                                 posterPath: moviewValue.posterPath ?? '',
                                 popularity: moviewValue.popularity ?? 0,
                                 title: moviewValue.title ?? '',
-                                overView: moviewValue.overview ?? ''),
-                          ),
-                        );
+                                overView: moviewValue.overview ?? '',
+                                id: value.videos.first.key.toString(),
+                              ),
+                            ),
+                          );
+                        });
                       },
                       child: MovieStack(
                           moviePath: moviewValue.posterPath.toString(),

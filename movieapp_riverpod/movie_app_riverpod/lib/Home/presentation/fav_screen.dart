@@ -24,16 +24,21 @@ class FavScreen extends HookConsumerWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      final videos =
+                          ref.watch(videoProvider(movieItem.id!.toString()));
+                      String url = videos.value!.videos.first.key.toString();
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) => DetailPage(
-                              imdbValue: movieItem.voteAverage.toString(),
-                              voteAverage: movieItem.voteAverage!,
-                              posterPath: movieItem.posterPath ?? '',
-                              popularity: movieItem.popularity ?? 0,
-                              title: movieItem.title ?? '',
-                              overView: movieItem.overview ?? ''),
+                            imdbValue: movieItem.voteAverage.toString(),
+                            voteAverage: movieItem.voteAverage!,
+                            posterPath: movieItem.posterPath ?? '',
+                            popularity: movieItem.popularity ?? 0,
+                            title: movieItem.title ?? '',
+                            overView: movieItem.overview ?? '',
+                            id: url,
+                          ),
                         ),
                       );
                     },
