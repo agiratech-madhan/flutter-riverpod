@@ -14,6 +14,7 @@ class MovieRepository {
       final url = Uri.http('api.themoviedb.org', params,
           {'api_key': Constants.apiKey, 'query': searchValue});
       final response = await http.get(url);
+      print(response.body);
       Movies moviesData = Movies.fromJson(jsonDecode(response.body));
       return moviesData;
     } catch (e) {

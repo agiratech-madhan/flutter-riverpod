@@ -10,12 +10,20 @@ class MovieFilter extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final movieType = ref.watch(movieFilterProvider);
     final themeMode = ref.watch(themeProvider);
+    final sets = ref.watch(selectedGenresListProvider);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: MovieType.values
           .map(
             (type) => GestureDetector(
-              onTap: () => ref.read(movieFilterProvider.notifier).state = type,
+              onTap: () {
+                ref.read(movieFilterProvider.notifier).state = type;
+                if (sets.isNotEmpty) {
+                  ref.read(appliedFilter.notifier).state = true;
+                } else {
+                  ref.read(appliedFilter.notifier).state = false;
+                }
+              },
               child: Container(
                 height: 30,
                 width: 90,

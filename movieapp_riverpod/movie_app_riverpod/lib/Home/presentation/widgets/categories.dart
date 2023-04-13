@@ -107,9 +107,7 @@ class Categories extends HookConsumerWidget {
                                       ref
                                           .read(
                                               movieControllerProvider.notifier)
-                                          .updateFilter();
-                                      ref.read(appliedFilter.notifier).state =
-                                          true;
+                                          .fetchMovies();
 
                                       Navigator.of(context).pop();
                                     },
@@ -141,7 +139,8 @@ class Categories extends HookConsumerWidget {
             icon: const Icon(Icons.sort_sharp),
             label: const Text('Filter'),
           ),
-          if (filteredDataProvider)
+          // if (filteredDataProvider==tru)
+          if (sets.isNotEmpty)
             Expanded(
               child: SizedBox(
                 height: 40,
@@ -166,12 +165,11 @@ class Categories extends HookConsumerWidget {
                             if (s.isNotEmpty) {
                               await ref
                                   .read(movieControllerProvider.notifier)
-                                  .updateFilter();
+                                  .fetchMovies();
                             } else {
                               await ref
                                   .read(movieControllerProvider.notifier)
                                   .fetchMovies();
-
                               if (!filteredDataProvider) {
                                 ref.invalidate(genresListProvider);
                               }

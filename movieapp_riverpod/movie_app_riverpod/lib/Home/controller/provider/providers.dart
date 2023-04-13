@@ -12,7 +12,7 @@ final movieFilterProvider = StateProvider((ref) => MovieType.popular);
 // final filterSearchProvider = StateProvider((ref) => false);
 final repoProvider = Provider((ref) => MovieRepository());
 final movieControllerProvider =
-    StateNotifierProvider.autoDispose<MovieController, Movies?>((ref) {
+    StateNotifierProvider<MovieController, Movies?>((ref) {
   // ref.onDispose(() {
   //   ref.invalidate(movieControllerProvider);
   // })
