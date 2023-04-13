@@ -115,7 +115,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     TextSpan(
                         text: 'Top Results',
                         style: TextStyle(
-                            color: !themeMode ? Colors.grey : Colors.white,
+                            color: !themeMode
+                                ? Theme.of(context).primaryColor
+                                : Colors.white,
                             fontSize: 20)),
                   ],
                 ),
