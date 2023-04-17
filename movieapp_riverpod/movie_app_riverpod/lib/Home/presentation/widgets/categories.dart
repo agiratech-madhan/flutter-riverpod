@@ -17,10 +17,12 @@ class Categories extends HookConsumerWidget {
             ? MainAxisAlignment.end
             : MainAxisAlignment.start,
         children: [
-          TextButton.icon(
-            style: TextButton.styleFrom(
-                backgroundColor: themeMode ? Colors.grey : Colors.white,
-                foregroundColor: !themeMode ? Colors.grey : Colors.white),
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+                backgroundColor:
+                    !themeMode ? Colors.white : Colors.grey.withOpacity(0.3),
+                foregroundColor:
+                    !themeMode ? const Color(0xffF8B88B) : Colors.white),
             onPressed: () {
               if (sets.isEmpty) {
                 ref.read(appliedFilter.notifier).state = false;
@@ -142,8 +144,9 @@ class Categories extends HookConsumerWidget {
           // if (filteredDataProvider==tru)
           if (sets.isNotEmpty)
             Expanded(
-              child: SizedBox(
-                height: 40,
+              child: Container(
+                height: 35,
+                margin: const EdgeInsets.symmetric(horizontal: 5),
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: sets.length,
@@ -153,10 +156,14 @@ class Categories extends HookConsumerWidget {
                     final s = sets.toList();
                     return Container(
                       margin: const EdgeInsets.only(right: 10),
-                      child: TextButton(
-                          style: TextButton.styleFrom(
-                              backgroundColor: Colors.grey,
-                              foregroundColor: Colors.white),
+                      child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                              backgroundColor: !themeMode
+                                  ? Colors.white
+                                  : Colors.grey.withOpacity(0.3),
+                              foregroundColor: !themeMode
+                                  ? Color(0xffF8B88B)
+                                  : Colors.white),
                           onPressed: () async {
                             ref
                                 .read(genresListProvider.notifier)

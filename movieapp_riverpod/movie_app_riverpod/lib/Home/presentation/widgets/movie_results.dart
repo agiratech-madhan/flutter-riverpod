@@ -10,7 +10,6 @@ class MovieResult extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(movieControllerProvider);
-    // final filter = ref.watch(appliedFilter);
     final isLoading = ref.watch(isLoadingProvider);
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.55,
@@ -34,7 +33,6 @@ class MovieResult extends HookConsumerWidget {
                       onTap: () async {
                         final videos = ref
                             .watch(videoProvider(moviewValue.id!.toString()));
-                        // String url = videos.value!.videos.first.key.toString();
                         videos.whenData((value) {
                           return Navigator.push(
                             context,

@@ -12,7 +12,18 @@ class FavScreen extends HookConsumerWidget {
     final d = ref.watch(fav);
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Favorite Movies List"),
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: Icon(
+              Icons.arrow_back,
+              color: context.theme.textTheme.titleLarge!.color,
+            )),
+        title: Text(
+          "Favorite Movies List",
+          style: context.theme.textTheme.titleLarge,
+        ),
       ),
       body: d.when(
         data: (data) {
@@ -54,6 +65,7 @@ class FavScreen extends HookConsumerWidget {
                       subtitle: Text(
                         movieItem.overview.toString(),
                         maxLines: 2,
+                        style: context.theme.textTheme.displaySmall,
                       ),
                     ),
                   ),
@@ -61,7 +73,7 @@ class FavScreen extends HookConsumerWidget {
               });
         },
         error: (s, t) {
-          return const Text("data");
+          return const Text("Error");
         },
         loading: () => const Center(
           child: CircularProgressIndicator(),

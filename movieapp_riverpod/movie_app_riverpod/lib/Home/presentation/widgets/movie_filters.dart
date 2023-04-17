@@ -29,21 +29,23 @@ class MovieFilter extends ConsumerWidget {
                 width: 90,
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(10),
                   color: type == movieType
                       ? themeMode
                           ? Colors.white
-                          : Colors.grey
+                          : const Color(0xffF8B88B)
                       : null,
                 ),
                 child: Text(
                   type.name,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                      color: themeMode
-                          ? Colors.grey
-                          : type != movieType
-                              ? Colors.grey
+                      color: type != movieType
+                          ? themeMode
+                              ? Colors.white
+                              : const Color(0xffF8B88B)
+                          : themeMode
+                              ? const Color(0xffF8B88B)
                               : Colors.white),
                 ),
               ),

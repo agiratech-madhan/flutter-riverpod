@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:movie_app_riverpod/Home/controller/provider/providers.dart';
+import 'package:movie_app_riverpod/utils.dart';
 
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
@@ -24,7 +25,6 @@ class DetailPage extends StatefulHookConsumerWidget {
   final String title;
   final String overView;
   final String id;
-  // final STr
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DetailPageState();
@@ -34,17 +34,19 @@ class _DetailPageState extends ConsumerState<DetailPage> {
   late YoutubePlayerController youtubePlayerController;
   @override
   void initState() {
-    youtubePlayerController =
-        YoutubePlayerController(initialVideoId: widget.id);
+    youtubePlayerController = YoutubePlayerController(
+      initialVideoId: widget.id,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: true,
+      ),
+    );
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final theme = ref.watch(themeProvider);
-
     return Scaffold(
-      backgroundColor: !theme ? Colors.white : Colors.black,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
@@ -53,21 +55,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
             },
             icon: Icon(
               Icons.arrow_back,
-              color: theme ? Colors.white : Colors.black,
+              color: context.theme.textTheme.titleLarge!.color,
             )),
-        title: Text(widget.title),
-        /**
-         * Container(
-              height: 50,
-              width: 50,
-              child: videos.when(
-                  data: (data) {
-                    return Text(data.videos.length.toString());
-                  },
-                  error: (e, r) => Text('error'),
-                  loading: () => CircularProgressIndicator()),
-            ),
-         */
+        title: Text(
+          widget.title,
+          style: context.theme.textTheme.titleLarge,
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -77,15 +70,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Container(
+                  SizedBox(
                     height: MediaQuery.of(context).size.height * 0.4,
                     width: double.infinity,
-                    // decoration: BoxDecoration(
-                    //   image: DecorationImage(
-                    //       fit: BoxFit.cover,
-                    //       image: NetworkImage(
-                    //           'https://image.tmdb.org/t/p/w185/$posterPath')),
-                    // ),
                     child: YoutubePlayer(controller: youtubePlayerController),
                   ),
                   Column(
@@ -99,7 +86,12 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                               backgroundColor: Colors.amber,
                               labelStyle: const TextStyle(
                                   fontSize: 17, color: Colors.black),
-                              label: Text('IMDB ${widget.voteAverage}'),
+                              label: Text(
+                                'IMDB ${widget.voteAverage}, ',
+                                style: TextStyle(
+                                    color: context
+                                        .theme.textTheme.titleLarge!.color),
+                              ),
                             ),
                           ),
                           const Padding(
@@ -112,28 +104,21 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                           ),
                           Text(
                             '${widget.voteAverage}',
-                            style: const TextStyle(
-                                color: Colors.amber,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
+                            style: context.theme.textTheme.bodySmall,
                           ),
                           Text(
                             ' (${(widget.popularity).round()}K reviews)',
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: context.theme.textTheme.titleLarge!.color,
                               fontSize: 20,
                             ),
                           )
-                          // const Spacer(),
                         ],
                       ),
                       Text(
                         widget.title,
                         textAlign: TextAlign.left,
-                        style: TextStyle(
-                            fontSize: 20,
-                            color: !theme ? Colors.black : Colors.white,
-                            fontWeight: FontWeight.bold),
+                        style: context.theme.textTheme.displayLarge,
                       ),
                       const SizedBox(
                         height: 10,
@@ -141,12 +126,9 @@ class _DetailPageState extends ConsumerState<DetailPage> {
                       Padding(
                         padding: const EdgeInsets.only(left: 10, right: 25),
                         child: SizedBox(
-                          // height: 135,
                           child: Text(
                             widget.overView,
-                            style: TextStyle(
-                                fontSize: 18,
-                                color: !theme ? Colors.black : Colors.white),
+                            style: context.theme.textTheme.displayMedium,
                           ),
                         ),
                       ),
@@ -161,25 +143,3 @@ class _DetailPageState extends ConsumerState<DetailPage> {
     );
   }
 }
-// class DetailPage extends ConsumerWidget {
-//   const DetailPage({
-//     Key? key,
-//     required this.imdbValue,
-//     required this.voteAverage,
-//     required this.posterPath,
-//     required this.popularity,
-//     required this.title,
-//     required this.overView,
-//     required this.id,
-//   }) : super(key: key);
-//   final String imdbValue;
-//   final num voteAverage;
-//   final String posterPath;
-//   final double popularity;
-//   final String title;
-//   final String overView;
-//   final int id;
-
- 
-
-// }

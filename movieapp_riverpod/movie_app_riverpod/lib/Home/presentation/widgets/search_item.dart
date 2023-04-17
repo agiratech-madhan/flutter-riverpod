@@ -9,6 +9,7 @@ class SearchMovie extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final data = ref.watch(movieControllerProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return Autocomplete<MovieData>(
       optionsBuilder: (textEditingValue) {
@@ -38,6 +39,9 @@ class SearchMovie extends HookConsumerWidget {
           controller: controller,
           decoration: InputDecoration(
               hintText: 'Search',
+              hintStyle: TextStyle(
+                  color: !themeMode ? Colors.black54 : Colors.white,
+                  fontWeight: FontWeight.normal),
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.92,
                   maxHeight: MediaQuery.of(context).size.height * 0.07),
@@ -46,7 +50,9 @@ class SearchMovie extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(20.0),
               ),
               filled: true,
-              fillColor: Colors.grey.withOpacity(0.7),
+              fillColor: !themeMode
+                  ? Colors.grey.withOpacity(0.2)
+                  : Colors.grey.withOpacity(0.5),
               prefixIconColor: Colors.red,
               prefixIcon: IconButton(
                 onPressed: (() async {}),

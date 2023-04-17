@@ -1,39 +1,24 @@
-import 'dart:async';
-
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Utils {
   static String posterPathUrl(String url) {
     return 'https://image.tmdb.org/t/p/w185/$url';
   }
+
+  static String apiUrl() {
+    return 'https://api.themoviedb.org/3/';
+  }
+
+  static String fetchMovieParams() =>
+      '?api_key=${dotenv.env['APIKEY']}&language=en-US&sort_by=created_at.asc&page=1&session_id=${dotenv.env['SESSION_ID']}';
+  static String fetchMovieUrl(String params) =>
+      '${apiUrl()}account/16291825/favorite/movies$params';
+
+  static String movieVideos(String id) =>
+      '${apiUrl()}movie/$id/videos?api_key=${dotenv.env['APIKEY']}&language=en-US';
 }
 
-extension DebounceExtension on Ref {
-  /// delays the execution of the code for the given duration,
-  /// if any dependency changes during the period,
-  /// the timer will reset and restart
-  /// if nothing changes, the rest of the code will be executed.
-  Future<void> debounce([
-    Duration duration = const Duration(milliseconds: 350),
-  ]) {
-    final completer = Completer<void>();
-
-    /// creates a timer with the given duration
-    /// when the time expires, and the completer hasn't completed yet, complete it.
-    /// and the debounce function lets the rest of the code executed
-    final timer = Timer(duration, () {
-      if (!completer.isCompleted) completer.complete();
-    });
-
-    /// if provider disposed and the completer hasn't completed yet
-    /// cancel the timer and throw canceled error
-    onDispose(() {
-      timer.cancel();
-      if (!completer.isCompleted) {
-        completer.completeError(StateError('Canceled'));
-      }
-    });
-
-    return completer.future;
-  }
+extension ContextUtils on BuildContext {
+  ThemeData get theme => Theme.of(this);
 }

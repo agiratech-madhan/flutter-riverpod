@@ -6,6 +6,7 @@ import 'package:movie_app_riverpod/Home/presentation/widgets/categories.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_filters.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_results.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/search_item.dart';
+import 'package:movie_app_riverpod/utils.dart';
 
 import '../controller/provider/providers.dart';
 
@@ -34,28 +35,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           elevation: 0,
           title: ListTile(
             contentPadding: const EdgeInsets.all(0),
-            title: RichText(
-                textAlign: TextAlign.left,
-                text: TextSpan(children: [
-                  TextSpan(
-                    text: 'Hello ',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: !themeMode ? Colors.grey : Colors.white,
-                    ),
-                  ),
-                  TextSpan(
-                    text: 'Flutter',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: !themeMode ? Colors.grey : Colors.white,
-                    ),
-                  ),
-                ])),
-            subtitle: const Text(
+            title: Text(
               'The Movie Database',
-              style: TextStyle(color: Colors.grey, fontSize: 17),
+              style: context.theme.textTheme.titleLarge,
             ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -114,11 +96,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                   children: [
                     TextSpan(
                         text: 'Top Results',
-                        style: TextStyle(
-                            color: !themeMode
-                                ? Theme.of(context).primaryColor
-                                : Colors.white,
-                            fontSize: 20)),
+                        style: context.theme.textTheme.titleLarge),
                   ],
                 ),
               ),
