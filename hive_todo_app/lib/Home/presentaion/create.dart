@@ -1,9 +1,13 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
-import 'package:hive_todo_app/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
+
 import 'package:hive_todo_app/Home/model/todo_model.dart';
+import 'package:hive_todo_app/utils.dart';
+
+import '../controller/todo_controller.dart';
 import '../provider/todo_provider.dart';
 
 class EditScreen extends StatefulHookConsumerWidget {
@@ -14,25 +18,27 @@ class EditScreen extends StatefulHookConsumerWidget {
     required this.isNew,
     required this.id,
     this.status,
+    required this.index,
   }) : super(key: key);
   final String description;
   final String title;
   final bool isNew;
   final String id;
   final Status? status;
+  final int index;
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditScreenState();
 }
 
 class _EditScreenState extends ConsumerState<EditScreen> {
   final titleController = TextEditingController();
-  final desController = TextEditingController();
+  final categoryController = TextEditingController();
 
   @override
   void initState() {
     if (!widget.isNew) {
       titleController.text = widget.title;
-      desController.text = widget.description;
+      categoryController.text = widget.description;
     }
     super.initState();
   }
@@ -40,7 +46,6 @@ class _EditScreenState extends ConsumerState<EditScreen> {
   @override
   Widget build(BuildContext context) {
     final status = ref.watch(statusProvider);
-
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -65,7 +70,7 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             ),
           ),
           TextField(
-            controller: desController,
+            controller: categoryController,
             decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(
@@ -77,7 +82,7 @@ class _EditScreenState extends ConsumerState<EditScreen> {
                   color: Colors.black54,
                 ),
               ),
-              hintText: ' Enter Description',
+              hintText: ' Enter category',
             ),
           ).py12(),
           const SizedBox(
@@ -86,14 +91,17 @@ class _EditScreenState extends ConsumerState<EditScreen> {
           RadioListTile<Status>(
               title: const Text("Completed"),
               value: Status.completed,
-              groupValue: widget.status ?? status,
+              groupValue: status,
               onChanged: (v) {
+                print(v);
+                print(ref.watch(statusProvider).name);
                 ref.read(statusProvider.notifier).state = v!;
+                print(ref.watch(statusProvider).name);
               }),
           RadioListTile<Status>(
               title: const Text("Pending"),
               value: Status.pending,
-              groupValue: widget.status ?? status,
+              groupValue: status,
               onChanged: (v) {
                 ref.read(statusProvider.notifier).state = v!;
               }),
@@ -101,7 +109,9 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.pop(context);
+                },
                 child: const Text(
                   'Cancel',
                 ),
@@ -112,28 +122,29 @@ class _EditScreenState extends ConsumerState<EditScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (widget.isNew) {
-                    ref.read(todoDaTaProvider.notifier).addTodo(
+                    ref.read(hiveData.notifier).addTodo(
                           Todo(
                             title: titleController.text,
-                            createdAt: DateFormat(" d MMM yyyy")
+                            createdAt: DateFormat("d MMM yyyy:h:ma")
                                 .format(DateTime.now()),
                             status: status.status,
-                            description: desController.text,
+                            description: categoryController.text,
                           ),
                         );
                   } else {
-                    ref.read(todoDaTaProvider.notifier).updateTodo(
-                          widget.id,
+                    ref.read(hiveData.notifier).updateTodo(
+                          widget.index,
                           Todo(
                             title: titleController.text,
-                            createdAt: DateFormat(" d MMM yyyy")
+                            createdAt: DateFormat("d MMM yyyy:h:ma")
                                 .format(DateTime.now()),
                             status: status.name,
-                            description: desController.text,
+                            description: categoryController.text,
                           ),
                         );
-                    ref.invalidate(statusProvider);
                   }
+                  ref.invalidate(statusProvider);
+
                   Navigator.pop(context);
                 },
                 child: Text(

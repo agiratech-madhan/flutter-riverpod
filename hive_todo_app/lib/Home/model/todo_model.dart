@@ -1,11 +1,18 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:uuid/uuid.dart';
+import 'package:hive/hive.dart';
+part 'todo_model.g.dart';
 
-class Todo {
+@HiveType(typeId: 1)
+class Todo extends HiveObject {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final String title;
+  @HiveField(2)
   final String description;
+  @HiveField(3)
   final String createdAt;
+  @HiveField(4)
   final String? status;
   Todo({
     required this.title,
@@ -14,7 +21,3 @@ class Todo {
     this.status,
   }) : id = const Uuid().v4();
 }
-
-/**Home Screen -> List TODOs, bottom Sheet - Filters , Tab Bar - Categories -> Categories - Completed, Pending, iN Progress -> Filters -> Created_at, Status, Label
-Add Screen -> Seprate Screen -> Todo Label, Category .
-Edit Sceen ->  Notes need to be  Modified. */

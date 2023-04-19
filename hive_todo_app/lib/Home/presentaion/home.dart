@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:hive_todo_app/Home/pages/create.dart';
+import 'package:hive_todo_app/Home/model/todo_model.dart';
+import 'package:hive_todo_app/Home/presentaion/create.dart';
 import 'package:hive_todo_app/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../controller/todo_controller.dart';
 import '../provider/todo_provider.dart';
+import '../repo/todorepo.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key});
@@ -15,6 +18,8 @@ class HomePage extends StatefulHookConsumerWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
+    final provider = ref.watch(hiveData);
+    print(provider?.length);
     final data = ref.watch(filteredDataProvider);
     return Scaffold(
       appBar: AppBar(
@@ -43,26 +48,36 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 maxLines: 1,
                               ),
                               Text(
-                                data[index].createdAt,
+                                data[index].createdAt.substring(0, 11),
                                 maxLines: 1,
                               ),
                             ],
                           ),
-                          subtitle: Text(
-                            data[index].description,
+                          subtitle: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                data[index].description,
+                              ),
+                              Text(
+                                data[index].createdAt.substring(12),
+                              ),
+                            ],
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    print(data[index].status);
+                                    // print(data[index].status);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => EditScreen(
                                                   isNew: false,
                                                   id: data[index].id,
+                                                  index: index,
                                                   description:
                                                       data[index].description,
                                                   title: data[index].title,
@@ -76,8 +91,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                               IconButton(
                                   onPressed: () {
                                     ref
-                                        .read(todoDaTaProvider.notifier)
-                                        .removeTodo(index, data[index].id);
+                                        .read(hiveData.notifier)
+                                        .removeTodo(data[index].id);
                                   },
                                   icon:
                                       const Icon(Icons.delete_outline_rounded)),
@@ -92,14 +107,17 @@ class _HomePageState extends ConsumerState<HomePage> {
         onPressed: () {
           ref.invalidate(statusProvider);
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const EditScreen(
-                        isNew: true,
-                        id: '',
-                        description: '',
-                        title: '',
-                      )));
+            context,
+            MaterialPageRoute(
+              builder: (context) => const EditScreen(
+                isNew: true,
+                id: '',
+                description: '',
+                title: '',
+                index: 0,
+              ),
+            ),
+          );
         },
         child: const Icon(Icons.add),
       ),
