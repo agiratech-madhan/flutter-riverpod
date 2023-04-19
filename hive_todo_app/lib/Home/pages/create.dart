@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hive_todo_app/Home/pages/utils.dart';
+import 'package:hive_todo_app/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
 import 'package:hive_todo_app/Home/model/todo_model.dart';
-import 'controller/todo_controller.dart';
-
-final statusProvider = StateProvider<Status?>((ref) => Status.all);
-final filterProvider = StateProvider<Status?>((ref) => Status.all);
+import '../provider/todo_provider.dart';
 
 class EditScreen extends StatefulHookConsumerWidget {
   const EditScreen({
@@ -36,7 +33,6 @@ class _EditScreenState extends ConsumerState<EditScreen> {
     if (!widget.isNew) {
       titleController.text = widget.title;
       desController.text = widget.description;
-      ref.read(statusProvider.notifier).state = widget.status;
     }
     super.initState();
   }
@@ -44,6 +40,7 @@ class _EditScreenState extends ConsumerState<EditScreen> {
   @override
   Widget build(BuildContext context) {
     final status = ref.watch(statusProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -89,16 +86,16 @@ class _EditScreenState extends ConsumerState<EditScreen> {
           RadioListTile<Status>(
               title: const Text("Completed"),
               value: Status.completed,
-              groupValue: status,
+              groupValue: widget.status ?? status,
               onChanged: (v) {
-                ref.read(statusProvider.notifier).state = v;
+                ref.read(statusProvider.notifier).state = v!;
               }),
           RadioListTile<Status>(
               title: const Text("Pending"),
               value: Status.pending,
-              groupValue: status,
+              groupValue: widget.status ?? status,
               onChanged: (v) {
-                ref.read(statusProvider.notifier).state = v;
+                ref.read(statusProvider.notifier).state = v!;
               }),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -115,23 +112,23 @@ class _EditScreenState extends ConsumerState<EditScreen> {
               ElevatedButton(
                 onPressed: () {
                   if (widget.isNew) {
-                    ref.read(dataProvider).addTodo(
+                    ref.read(todoDaTaProvider.notifier).addTodo(
                           Todo(
                             title: titleController.text,
                             createdAt: DateFormat(" d MMM yyyy")
                                 .format(DateTime.now()),
-                            status: status?.status,
+                            status: status.status,
                             description: desController.text,
                           ),
                         );
                   } else {
-                    ref.read(dataProvider).updateTodo(
+                    ref.read(todoDaTaProvider.notifier).updateTodo(
                           widget.id,
                           Todo(
                             title: titleController.text,
                             createdAt: DateFormat(" d MMM yyyy")
                                 .format(DateTime.now()),
-                            status: status?.status,
+                            status: status.name,
                             description: desController.text,
                           ),
                         );

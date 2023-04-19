@@ -9,13 +9,13 @@ extension StatusExtension on Status {
     String status;
     switch (this) {
       case Status.pending:
-        status = 'Pending';
+        status = 'pending';
         break;
       case Status.completed:
-        status = "Completed";
+        status = "completed";
         break;
       case Status.all:
-        status = "All";
+        status = "all";
         break;
     }
     return status;

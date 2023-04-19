@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hive_todo_app/Home/pages/create.dart';
-import 'package:hive_todo_app/Home/pages/utils.dart';
+import 'package:hive_todo_app/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:velocity_x/velocity_x.dart';
 
-import 'controller/todo_controller.dart';
+import '../provider/todo_provider.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key});
@@ -18,7 +15,7 @@ class HomePage extends StatefulHookConsumerWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
-    final data = ref.watch(dataProvider);
+    final data = ref.watch(filteredDataProvider);
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -27,52 +24,50 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Column(
         children: [
           const SizedBox(height: 40, child: StatusFilter()),
-          data.todos.isEmpty
+          data.isEmpty
               ? const Center(
                   child: Text("No data"),
                 )
               : Expanded(
                   child: ListView.builder(
-                      itemCount: data.todos.length,
+                      itemCount: data.length,
                       itemBuilder: (context, index) {
-                        // print(data.todos[index].id);
+                        // print(data[index].id);
                         return ListTile(
                           title: Row(
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                data.todos[index].title,
+                                data[index].title,
                                 maxLines: 1,
                               ),
                               Text(
-                                data.todos[index].createdAt,
+                                data[index].createdAt,
                                 maxLines: 1,
                               ),
                             ],
                           ),
                           subtitle: Text(
-                            data.todos[index].description,
+                            data[index].description,
                           ),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    print(data.todos[index].status);
+                                    print(data[index].status);
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => EditScreen(
                                                   isNew: false,
-                                                  id: data.todos[index].id,
-                                                  description: data
-                                                      .todos[index].description,
-                                                  title:
-                                                      data.todos[index].title,
-                                                  status: data.todos[index]
-                                                              .status ==
-                                                          'Pending'
+                                                  id: data[index].id,
+                                                  description:
+                                                      data[index].description,
+                                                  title: data[index].title,
+                                                  status: data[index].status ==
+                                                          'pending'
                                                       ? Status.pending
                                                       : Status.completed,
                                                 )));
@@ -80,7 +75,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   icon: const Icon(Icons.edit)),
                               IconButton(
                                   onPressed: () {
-                                    ref.read(dataProvider).removeTodo(index);
+                                    ref
+                                        .read(todoDaTaProvider.notifier)
+                                        .removeTodo(index, data[index].id);
                                   },
                                   icon:
                                       const Icon(Icons.delete_outline_rounded)),
@@ -97,7 +94,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => EditScreen(
+                  builder: (context) => const EditScreen(
                         isNew: true,
                         id: '',
                         description: '',
@@ -127,7 +124,7 @@ class StatusFilter extends ConsumerWidget {
                         ? Colors.purple.withOpacity(0.7)
                         : Colors.white),
                 onPressed: () {
-                  ref.read(statusProvider.notifier).state = type;
+                  ref.read(filterProvider.notifier).state = type;
                 },
                 child: Text(
                   type.name,
@@ -137,9 +134,3 @@ class StatusFilter extends ConsumerWidget {
     );
   }
 }
-/**Chip(
-                  label: Text(
-                    "${type.name}",
-                  ),
-                  backgroundColor: type == status ? Colors.blue : null,
-                ), */
