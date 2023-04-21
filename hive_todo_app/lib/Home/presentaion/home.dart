@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hive_todo_app/Home/presentaion/create.dart';
+import 'package:hive_todo_app/Home/presentaion/widgets/categories.dart';
+import 'package:hive_todo_app/Home/presentaion/widgets/status_filter.dart';
 import 'package:hive_todo_app/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:velocity_x/velocity_x.dart';
 
-import '../controller/todo_controller.dart';
+import '../provider/category_provider.dart';
 import '../provider/todo_provider.dart';
-import '../repo/todorepo.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key});
@@ -19,8 +20,12 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final provider = ref.watch(hiveData);
-    print(provider?.length);
+    debugPrint(provider?.length.toString());
     final data = ref.watch(filteredDataProvider);
+
+    final enabledFilter = ref.watch(enabledFilterProvider);
+    final selectedItem = ref.watch(selectedFilterItemProvider);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -29,6 +34,48 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Column(
         children: [
           const SizedBox(height: 40, child: StatusFilter()),
+          SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisSize: !(enabledFilter && selectedItem.isNotEmpty)
+                    ? MainAxisSize.max
+                    : MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Categories(),
+                  if (enabledFilter && selectedItem.isNotEmpty)
+                    Flexible(
+                      child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: selectedItem.length,
+                          itemBuilder: (context, index) {
+                            return OutlinedButton(
+                                    onPressed: () async {
+                                      await ref
+                                          .read(categoryListProvider.notifier)
+                                          .updateOption(selectedItem[index].id,
+                                              value: false);
+
+                                      if (selectedItem.isEmpty) {
+                                        ref
+                                            .read(
+                                                enabledFilterProvider.notifier)
+                                            .state = false;
+                                      } else {
+                                        ref
+                                            .read(
+                                                enabledFilterProvider.notifier)
+                                            .state = true;
+                                      }
+                                    },
+                                    child: Text(selectedItem[index]
+                                        .category
+                                        .toString()))
+                                .py4();
+                          }),
+                    ),
+                ],
+              )),
           data.isEmpty
               ? const Center(
                   child: Text("No data"),
@@ -37,7 +84,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: ListView.builder(
                       itemCount: data.length,
                       itemBuilder: (context, index) {
-                        // print(data[index].id);
                         return ListTile(
                           title: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -70,7 +116,10 @@ class _HomePageState extends ConsumerState<HomePage> {
                             children: [
                               IconButton(
                                   onPressed: () {
-                                    // print(data[index].status);
+                                    ref.read(statusProvider.notifier).state =
+                                        data[index].status == 'pending'
+                                            ? Status.pending
+                                            : Status.completed;
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
@@ -121,34 +170,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         },
         child: const Icon(Icons.add),
       ),
-    );
-  }
-}
-
-class StatusFilter extends ConsumerWidget {
-  const StatusFilter({super.key});
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final status = ref.watch(filterProvider);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: Status.values
-          .map((type) => InkWell(
-                  child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                    backgroundColor:
-                        status == type ? Colors.purple.withOpacity(0.7) : null,
-                    foregroundColor: status != type
-                        ? Colors.purple.withOpacity(0.7)
-                        : Colors.white),
-                onPressed: () {
-                  ref.read(filterProvider.notifier).state = type;
-                },
-                child: Text(
-                  type.name,
-                ),
-              )))
-          .toList(),
     );
   }
 }

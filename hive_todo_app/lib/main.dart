@@ -4,6 +4,7 @@ import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
+import 'Home/model/categories_model.dart';
 import 'Home/presentaion/home.dart';
 
 Future<void> main() async {
@@ -11,7 +12,7 @@ Future<void> main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TodoAdapter());
   await Hive.openBox<Todo>('todos');
-  // await ProviderContainer().read(repoProvider.future);
+  await Hive.openBox('categories');
   runApp(const ProviderScope(child: MyApp()));
 }
 

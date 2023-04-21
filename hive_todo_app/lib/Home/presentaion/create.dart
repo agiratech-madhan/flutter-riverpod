@@ -7,8 +7,9 @@ import 'package:velocity_x/velocity_x.dart';
 import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hive_todo_app/utils.dart';
 
-import '../controller/todo_controller.dart';
 import '../provider/todo_provider.dart';
+
+final selectedRadioProvider = StateProvider<int>((ref) => 0);
 
 class EditScreen extends StatefulHookConsumerWidget {
   const EditScreen({
@@ -93,18 +94,16 @@ class _EditScreenState extends ConsumerState<EditScreen> {
               value: Status.completed,
               groupValue: status,
               onChanged: (v) {
-                print(v);
-                print(ref.watch(statusProvider).name);
                 ref.read(statusProvider.notifier).state = v!;
-                print(ref.watch(statusProvider).name);
               }),
           RadioListTile<Status>(
-              title: const Text("Pending"),
-              value: Status.pending,
-              groupValue: status,
-              onChanged: (v) {
-                ref.read(statusProvider.notifier).state = v!;
-              }),
+            title: const Text("Pending"),
+            value: Status.pending,
+            groupValue: status,
+            onChanged: (v) {
+              ref.read(statusProvider.notifier).state = v!;
+            },
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -144,7 +143,6 @@ class _EditScreenState extends ConsumerState<EditScreen> {
                         );
                   }
                   ref.invalidate(statusProvider);
-
                   Navigator.pop(context);
                 },
                 child: Text(
