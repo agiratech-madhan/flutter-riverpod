@@ -1,15 +1,10 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:velocity_x/velocity_x.dart';
-
 import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hive_todo_app/utils.dart';
-
 import '../provider/todo_provider.dart';
-
-final selectedRadioProvider = StateProvider<int>((ref) => 0);
 
 class EditScreen extends StatefulHookConsumerWidget {
   const EditScreen({
@@ -48,9 +43,16 @@ class _EditScreenState extends ConsumerState<EditScreen> {
   Widget build(BuildContext context) {
     final status = ref.watch(statusProvider);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("Edit Screen"),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        title: Text(
+          widget.isNew ? "Create Todo" : "Edit Todo",
+          style: const TextStyle(
+              color: Colors.purple, fontWeight: FontWeight.bold),
+        ),
       ),
       body: Column(
         children: [
@@ -58,14 +60,10 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             controller: titleController,
             decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black54,
-                ),
+                borderSide: BorderSide(color: Colors.purple, width: 2),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black54,
-                ),
+                borderSide: BorderSide(color: Colors.purple, width: 2),
               ),
               hintText: ' Enter title',
             ),
@@ -74,14 +72,10 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             controller: categoryController,
             decoration: const InputDecoration(
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black54,
-                ),
+                borderSide: BorderSide(color: Colors.purple, width: 2),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.black54,
-                ),
+                borderSide: BorderSide(color: Colors.purple, width: 2),
               ),
               hintText: ' Enter category',
             ),
@@ -93,6 +87,7 @@ class _EditScreenState extends ConsumerState<EditScreen> {
               title: const Text("Completed"),
               value: Status.completed,
               groupValue: status,
+              activeColor: Colors.purple,
               onChanged: (v) {
                 ref.read(statusProvider.notifier).state = v!;
               }),
@@ -100,6 +95,7 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             title: const Text("Pending"),
             value: Status.pending,
             groupValue: status,
+            activeColor: Colors.purple,
             onChanged: (v) {
               ref.read(statusProvider.notifier).state = v!;
             },
@@ -108,6 +104,9 @@ class _EditScreenState extends ConsumerState<EditScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                ),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -119,6 +118,9 @@ class _EditScreenState extends ConsumerState<EditScreen> {
                 width: 30,
               ),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.purple,
+                ),
                 onPressed: () {
                   if (widget.isNew) {
                     ref.read(hiveData.notifier).addTodo(

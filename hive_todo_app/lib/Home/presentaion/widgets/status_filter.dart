@@ -14,18 +14,23 @@ class StatusFilter extends HookConsumerWidget {
       children: Status.values
           .map(
             (type) => InkWell(
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                    backgroundColor:
-                        status == type ? Colors.purple.withOpacity(0.7) : null,
-                    foregroundColor: status != type
-                        ? Colors.purple.withOpacity(0.7)
-                        : Colors.white),
-                onPressed: () {
-                  ref.read(filterProvider.notifier).state = type;
-                },
-                child: Text(
-                  type.name,
+              child: Container(
+                width: 110,
+                child: OutlinedButton(
+                  style: OutlinedButton.styleFrom(
+                      backgroundColor: status == type
+                          ? Colors.purple.withOpacity(0.7)
+                          : null,
+                      foregroundColor: status != type
+                          ? Colors.purple.withOpacity(0.7)
+                          : Colors.white),
+                  onPressed: () {
+                    ref.read(filterProvider.notifier).state = type;
+                  },
+                  child: Text(
+                    type.name,
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             ),

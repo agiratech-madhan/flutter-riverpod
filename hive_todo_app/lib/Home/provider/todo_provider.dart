@@ -23,7 +23,6 @@ final filteredDataProvider = Provider<List<Todo>>(
     switch (status) {
       case Status.completed:
         return data.where((todo) {
-          // print(todo.status);
           return todo.status == 'completed';
         }).toList();
       case Status.pending:
@@ -33,6 +32,8 @@ final filteredDataProvider = Provider<List<Todo>>(
     }
   },
 );
+final selectedRadioProvider = StateProvider<int>((ref) => 0);
+
 final providerHive = Provider<TodoRepo>((ref) => TodoRepo());
 final hiveData =
     StateNotifierProvider<TodoHive, List<Todo>?>((ref) => TodoHive(ref));

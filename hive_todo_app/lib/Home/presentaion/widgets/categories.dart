@@ -9,7 +9,9 @@ class Categories extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedItem = ref.watch(selectedFilterItemProvider);
-    return IconButton(
+    return Padding(
+      padding: const EdgeInsets.only(left: 5.0, bottom: 5),
+      child: IconButton(
         onPressed: () {
           if (selectedItem.isEmpty) {
             ref.read(enabledFilterProvider.notifier).state = false;
@@ -107,7 +109,9 @@ class Categories extends HookConsumerWidget {
         },
         icon: const Icon(
           Icons.filter_alt_sharp,
-          size: 30,
-        ));
+          size: 35,
+        ),
+      ),
+    );
   }
 }
