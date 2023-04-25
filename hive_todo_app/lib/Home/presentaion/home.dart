@@ -11,7 +11,6 @@ import '../provider/todo_provider.dart';
 
 class HomePage extends StatefulHookConsumerWidget {
   const HomePage({super.key});
-
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
