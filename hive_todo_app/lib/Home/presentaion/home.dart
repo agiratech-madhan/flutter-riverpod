@@ -5,7 +5,6 @@ import 'package:hive_todo_app/Home/presentaion/widgets/status_filter.dart';
 import 'package:hive_todo_app/Home/presentaion/widgets/todo_view.dart';
 import 'package:hive_todo_app/utils.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 import '../provider/category_provider.dart';
 import '../provider/todo_provider.dart';
@@ -37,6 +36,32 @@ class _HomePageState extends ConsumerState<HomePage> {
           "Todo App ",
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 5.0),
+            child: IconButton(
+                onPressed: () {
+                  ref.invalidate(statusProvider);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const EditScreen(
+                        isNew: true,
+                        id: '',
+                        description: '',
+                        title: '',
+                        index: 0,
+                      ),
+                    ),
+                  );
+                },
+                icon: Icon(
+                  Icons.add_box_outlined,
+                  color: Colors.green,
+                  size: 30,
+                )),
+          )
+        ],
       ),
       body: Column(
         children: [
@@ -85,7 +110,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   },
                                   child: Text(
                                     selectedItem[index].category.toString(),
-                                  )).py4(),
+                                  )),
                             );
                           }),
                     ),
@@ -136,27 +161,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.green,
-        onPressed: () {
-          ref.invalidate(statusProvider);
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EditScreen(
-                isNew: true,
-                id: '',
-                description: '',
-                title: '',
-                index: 0,
-              ),
-            ),
-          );
-        },
-        child: const Icon(
-          Icons.add,
-        ),
       ),
     );
   }

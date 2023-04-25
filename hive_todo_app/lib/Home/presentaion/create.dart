@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:velocity_x/velocity_x.dart';
 import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hive_todo_app/utils.dart';
 import '../provider/todo_provider.dart';
@@ -48,113 +47,128 @@ class _EditScreenState extends ConsumerState<EditScreen> {
         centerTitle: true,
         elevation: 0,
         backgroundColor: Colors.white,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.black,
+              size: 30,
+            )),
         title: Text(
           widget.isNew ? "Create Todo" : "Edit Todo",
           style: const TextStyle(
               color: Colors.purple, fontWeight: FontWeight.bold),
         ),
       ),
-      body: Column(
-        children: [
-          TextField(
-            controller: titleController,
-            decoration: const InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purple, width: 2),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.purple, width: 2),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.purple, width: 2),
+                ),
+                hintText: ' Enter title',
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purple, width: 2),
-              ),
-              hintText: ' Enter title',
             ),
-          ),
-          TextField(
-            controller: categoryController,
-            decoration: const InputDecoration(
-              enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purple, width: 2),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: TextField(
+                controller: categoryController,
+                decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: BorderSide(color: Colors.purple, width: 2),
+                  ),
+                  hintText: ' Enter category',
+                ),
               ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.purple, width: 2),
-              ),
-              hintText: ' Enter category',
             ),
-          ).py12(),
-          const SizedBox(
-            height: 30,
-          ),
-          RadioListTile<Status>(
-              title: const Text("Completed"),
-              value: Status.completed,
+            const SizedBox(
+              height: 30,
+            ),
+            RadioListTile<Status>(
+                title: const Text("Completed"),
+                value: Status.completed,
+                groupValue: status,
+                activeColor: Colors.purple,
+                onChanged: (v) {
+                  ref.read(statusProvider.notifier).state = v!;
+                }),
+            RadioListTile<Status>(
+              title: const Text("Pending"),
+              value: Status.pending,
               groupValue: status,
               activeColor: Colors.purple,
               onChanged: (v) {
                 ref.read(statusProvider.notifier).state = v!;
-              }),
-          RadioListTile<Status>(
-            title: const Text("Pending"),
-            value: Status.pending,
-            groupValue: status,
-            activeColor: Colors.purple,
-            onChanged: (v) {
-              ref.read(statusProvider.notifier).state = v!;
-            },
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
+              },
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey,
+                  ),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text(
+                    'Cancel',
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text(
-                  'Cancel',
+                const SizedBox(
+                  width: 30,
                 ),
-              ),
-              const SizedBox(
-                width: 30,
-              ),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.purple,
+                  ),
+                  onPressed: () {
+                    if (widget.isNew) {
+                      ref.read(hiveData.notifier).addTodo(
+                            Todo(
+                              title: titleController.text,
+                              createdAt: DateFormat("d MMM yyyy:h:ma")
+                                  .format(DateTime.now()),
+                              status: status.status,
+                              description: categoryController.text,
+                            ),
+                          );
+                    } else {
+                      ref.read(hiveData.notifier).updateTodo(
+                            widget.index,
+                            Todo(
+                              title: titleController.text,
+                              createdAt: DateFormat("d MMM yyyy:h:ma")
+                                  .format(DateTime.now()),
+                              status: status.name,
+                              description: categoryController.text,
+                            ),
+                          );
+                    }
+                    ref.invalidate(statusProvider);
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    widget.isNew ? 'Create' : 'Update',
+                  ),
                 ),
-                onPressed: () {
-                  if (widget.isNew) {
-                    ref.read(hiveData.notifier).addTodo(
-                          Todo(
-                            title: titleController.text,
-                            createdAt: DateFormat("d MMM yyyy:h:ma")
-                                .format(DateTime.now()),
-                            status: status.status,
-                            description: categoryController.text,
-                          ),
-                        );
-                  } else {
-                    ref.read(hiveData.notifier).updateTodo(
-                          widget.index,
-                          Todo(
-                            title: titleController.text,
-                            createdAt: DateFormat("d MMM yyyy:h:ma")
-                                .format(DateTime.now()),
-                            status: status.name,
-                            description: categoryController.text,
-                          ),
-                        );
-                  }
-                  ref.invalidate(statusProvider);
-                  Navigator.pop(context);
-                },
-                child: Text(
-                  widget.isNew ? 'Create' : 'Update',
-                ),
-              ),
-            ],
-          )
-        ],
-      ).p(10),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }

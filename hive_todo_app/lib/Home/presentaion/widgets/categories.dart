@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:velocity_x/velocity_x.dart';
+// import 'package:velocity_x/velocity_x.dart';
 
 import '../../provider/category_provider.dart';
 
@@ -31,13 +31,14 @@ class Categories extends HookConsumerWidget {
                         height: MediaQuery.of(context).size.height * 0.70,
                         child: Column(
                           children: [
-                            SizedBox(
+                            Container(
+                              padding: const EdgeInsets.all(10),
                               height: 50,
                               child: const Text(
                                 "Select categories",
                                 style:
                                     TextStyle(fontSize: 17, color: Colors.grey),
-                              ).p(10),
+                              ),
                             ),
                             Flexible(
                               child: ListView.builder(
