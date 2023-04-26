@@ -65,3 +65,5 @@ class Cat {
     );
   }
 }
+
+class Test {}
