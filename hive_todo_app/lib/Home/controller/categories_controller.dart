@@ -15,12 +15,14 @@ class CatsState extends StateNotifier<Cats?> {
 
   final StateNotifierProviderRef? ref;
 
+  ///fetch the all categoties by todo
   getCategories() {
     final data = ref!.watch(categoriesListprovider);
     final r = Cats.fromJson(data);
     state = r;
   }
 
+  ///update  todo status
   Future<void> updateOption(String id, {bool? value}) async {
     state = state!.copyWith(
         categories: state!.categories!.map((e) {

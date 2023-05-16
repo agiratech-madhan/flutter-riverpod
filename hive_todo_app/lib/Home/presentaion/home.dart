@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+//Screens
 import 'package:hive_todo_app/Home/presentaion/create.dart';
+//Widgets
 import 'package:hive_todo_app/Home/presentaion/widgets/categories.dart';
 import 'package:hive_todo_app/Home/presentaion/widgets/status_filter.dart';
 import 'package:hive_todo_app/Home/presentaion/widgets/todo_view.dart';
+//Utils
 import 'package:hive_todo_app/utils.dart';
+// Riverpod
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
+//Providers
 import '../provider/category_provider.dart';
 import '../provider/todo_provider.dart';
 
@@ -18,11 +22,20 @@ class HomePage extends StatefulHookConsumerWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
+    ///List of Todo  without Filter Provider
     final provider = ref.watch(hiveData);
     debugPrint(provider?.length.toString());
+
+    ///List of Todo with Filter Provider data
+
     final data = ref.watch(filteredDataProvider);
 
+    ///whether the filter is selected or not
+
     final enabledFilter = ref.watch(enabledFilterProvider);
+
+    ///selected filter items Provider data
+
     final selectedItem = ref.watch(selectedFilterItemProvider);
 
     return Scaffold(
@@ -54,7 +67,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     ),
                   );
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.add_box_outlined,
                   color: Colors.green,
                   size: 30,
@@ -137,18 +150,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                                   ? Status.pending
                                   : Status.completed;
                           Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditScreen(
-                                        isNew: false,
-                                        id: data[index].id,
-                                        index: index,
-                                        description: data[index].description,
-                                        title: data[index].title,
-                                        status: data[index].status == 'pending'
-                                            ? Status.pending
-                                            : Status.completed,
-                                      )));
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditScreen(
+                                isNew: false,
+                                id: data[index].id,
+                                index: index,
+                                description: data[index].description,
+                                title: data[index].title,
+                                status: data[index].status == 'pending'
+                                    ? Status.pending
+                                    : Status.completed,
+                              ),
+                            ),
+                          );
                         },
                         onDelete: () {
                           ref

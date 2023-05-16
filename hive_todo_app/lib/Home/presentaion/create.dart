@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:hive_todo_app/Home/model/todo_model.dart';
 import 'package:hive_todo_app/utils.dart';
+// Localization
+import 'package:intl/intl.dart';
+
+//models
+import 'package:hive_todo_app/Home/model/todo_model.dart';
+
+// Riverpod
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+//Providers
 import '../provider/todo_provider.dart';
 
 class EditScreen extends StatefulHookConsumerWidget {

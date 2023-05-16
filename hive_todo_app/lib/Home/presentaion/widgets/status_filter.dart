@@ -14,7 +14,7 @@ class StatusFilter extends HookConsumerWidget {
       children: Status.values
           .map(
             (type) => InkWell(
-              child: Container(
+              child: SizedBox(
                 width: 110,
                 child: OutlinedButton(
                   style: OutlinedButton.styleFrom(

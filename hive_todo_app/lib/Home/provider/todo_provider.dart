@@ -5,8 +5,14 @@ import '../../utils.dart';
 import '../repo/todorepo.dart';
 import 'category_provider.dart';
 
+///filtered data based on user todo status
+
 final statusProvider = StateProvider<Status>((ref) => Status.all);
+
+///filtered data based on user todo category
 final filterProvider = StateProvider<Status>((ref) => Status.all);
+
+/// Filtered Todo List
 
 final filteredDataProvider = Provider<List<Todo>>(
   (ref) {
@@ -32,8 +38,14 @@ final filteredDataProvider = Provider<List<Todo>>(
     }
   },
 );
+
+///Category Selection
 final selectedRadioProvider = StateProvider<int>((ref) => 0);
 
+///Todo RepoProvider
 final providerHive = Provider<TodoRepo>((ref) => TodoRepo());
+
+///Hive data
+
 final hiveData =
     StateNotifierProvider<TodoHive, List<Todo>?>((ref) => TodoHive(ref));

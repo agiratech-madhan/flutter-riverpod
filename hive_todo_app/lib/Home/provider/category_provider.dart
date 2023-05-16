@@ -21,4 +21,5 @@ final selectedFilterItemProvider = Provider<List<Cat>>((ref) {
   return selected ?? d;
 });
 
+///whether the filter based on todo is selected or not
 final enabledFilterProvider = StateProvider<bool>((ref) => false);
