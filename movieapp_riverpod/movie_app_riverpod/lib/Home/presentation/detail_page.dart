@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:movie_app_riverpod/Home/controller/provider/providers.dart';
 import 'package:movie_app_riverpod/utils.dart';
 
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';

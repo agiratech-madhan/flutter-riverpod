@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_app_riverpod/Home/models/favorite_movie_model.dart';
@@ -5,10 +6,11 @@ import 'package:movie_app_riverpod/Home/models/genres_model.dart';
 import 'package:movie_app_riverpod/Home/models/video_reponse.dart';
 import 'package:movie_app_riverpod/constants.dart';
 import 'package:movie_app_riverpod/utils.dart';
-import 'dart:convert';
 import '../models/movie_model.dart';
 
 class MovieRepository {
+  ///To get movie based on Search Results
+
   Future<Movies> loadData(String value, {String filterType = 'popular'}) async {
     String searchValue = (value == '') ? '' : value;
     String params = (value == '') ? '/3/movie/$filterType' : '/3/search/movie';
@@ -23,6 +25,8 @@ class MovieRepository {
     }
   }
 
+  ///Get All the Movies GenresList
+
   Future<GenresList> getGenresList() async {
     try {
       final response = await http.get(Uri.parse(Constants.genreList));
@@ -33,6 +37,7 @@ class MovieRepository {
     }
   }
 
+  ///Fetch All the Movies
   Future<FavoriteMovies> fetchFavMovies() async {
     try {
       String queryPrarams = Utils.fetchMovieParams();
@@ -45,6 +50,8 @@ class MovieRepository {
       throw 'error Occured';
     }
   }
+
+  ///Fetch All the Videos of the Movie Id
 
   Future<VideosList> movieVideos(String? id) async {
     try {

@@ -1,3 +1,4 @@
+// ignore: constant_identifier_names
 enum MovieType { popular, upcoming, now_playing, top_rated }
 
 extension MovieTypeExtension on MovieType {

@@ -7,7 +7,6 @@ import 'package:movie_app_riverpod/Home/presentation/widgets/movie_filters.dart'
 import 'package:movie_app_riverpod/Home/presentation/widgets/movie_results.dart';
 import 'package:movie_app_riverpod/Home/presentation/widgets/search_item.dart';
 import 'package:movie_app_riverpod/utils.dart';
-
 import '../controller/provider/providers.dart';
 
 class HomeScreen extends StatefulHookConsumerWidget {
